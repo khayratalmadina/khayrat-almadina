@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>khayrat almadina</title>
+  <!-- استدعاء Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
+  <!-- استدعاء خط Cairo -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* تعريف متغيرات الألوان */
+    :root {
+      --primary-color:#2980b9;
+      --secondary-color: #27ae60;
+      --danger-color: #e74c3c;
+      --background-gradient: linear-gradient(135deg, #f0f8ff, #e0f7fa);
+      --header-gradient: linear-gradient(90deg, #2980b9, #3498db);
+    }
+    /* تنسيق الصفحة العام */
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--background-gradient);
+      margin: 0;
+      padding: 0;
+      color: #2c3e50;
+    }
+    /* رأس الصفحة */
+    header {
+      background: var(--header-gradient);
+      color: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      animation: fadeInDown 1s ease;
+    }
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    /* بطاقات المنتجات */
+    .product-card {
+      border: none;
+      border-radius: 15px;
+      background: #fff;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .product-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    /* تنسيق صورة المنتج */
+    .product-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    /* أزرار الجمع والطرح */
+    .btn-circle {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      text-align: center;
+      line-height: 40px;
+      font-size: 20px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    .btn-decrement {
+      background-color: var(--danger-color);
+      border: none;
+      color: #fff;
+    }
+    .btn-decrement:hover {
+      background-color: #c0392b;
+      transform: scale(1.1);
+    }
+    .btn-increment {
+      background-color: var(--secondary-color);
+      border: none;
+      color: #fff;
+    }
+    .btn-increment:hover {
+      background-color: #1e8449;
+      transform: scale(1.1);
+    }
+    /* زر رفع الصورة */
+    .btn-upload {
+      font-size: 0.9rem;
+    }
+    /* جدول السلة */
+    #cart table {
+      background-color: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    #cart th,
+    #cart td {
+      vertical-align: middle;
+    }
+    /* تنسيق نموذج معلومات الصيدلية */
+    form#order-form {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    form#order-form input,
+    form#order-form textarea {
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    form#order-form input:focus,
+    form#order-form textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="container my-4">
+    <!-- رأس الصفحة -->
+    <header>
+      <h1 class="display-4"><i><b>khayrat almadina</b></i></h1>
+      <p class="lead">لتجارة المستلزمات الطبية ولمواد العامة</p>
+    </header>
+
+    <!-- قائمة المنتجات -->
+    <div id="product-list" class="row g-4">
+      <!-- سيتم إضافة المنتجات ديناميكياً عبر JavaScript -->
+    </div>
+
+    <hr class="my-5" />
+
+    <!-- سلة الشراء -->
+    <h3 class="mb-3">سلة الشراء</h3>
+    <div id="cart" class="mb-5">
+      <table class="table table-striped">
+        <thead class="table-light">
+          <tr>
+            <th>المنتج</th>
+            <th>السعر</th>
+            <th>الكمية</th>
+            <th>الإجمالي</th>
+          </tr>
+        </thead>
+        <tbody id="cart-items">
+          <!-- سيتم إضافة عناصر السلة هنا -->
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="3" class="text-end">المجموع الكلي</th>
+            <th id="total-price">0</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <hr class="my-5" />
+
+    <!-- معلومات الصيدلية -->
+    <h3 class="mb-3">معلومات الصيدلية</h3>
+    <form id="order-form">
+      <div class="mb-3">
+        <label for="pharmacy-name" class="form-label">اسم الصيدلية</label>
+        <input type="text" class="form-control" id="pharmacy-name" required />
+      </div>
+      <div class="mb-3">
+        <label for="pharmacy-phone" class="form-label">رقم الهاتف</label>
+        <input type="text" class="form-control" id="pharmacy-phone" required />
+      </div>
+      <div class="mb-3">
+        <label for="pharmacy-address" class="form-label">العنوان</label>
+        <input type="text" class="form-control" id="pharmacy-address" required />
+      </div>
+      <div class="mb-3">
+        <label for="pharmacy-notes" class="form-label">الملاحظات</label>
+        <textarea class="form-control" id="pharmacy-notes" rows="3"></textarea>
+      </div>
+      <button type="button" id="send-order" class="btn btn-primary w-100 py-2">
+        أرسل الطلب عبر الواتساب
+      </button>
+    </form>
+  </div>
+
+  <!-- استدعاء Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // مصفوفة المنتجات مع كافة التفاصيل المطلوبة بالإضافة إلى خاصية الصورة
+    const products = [
+      { id: 1, name: "Normal saline 100ml", details: " كارتون 100 قطعة خصم 10%", price: 61000, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/479926117_122143212236425327_3376789666129355286_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_ohc=KfwpdnOh60oQ7kNvgHZF984&_nc_oc=AdiB5wkEdLQFICmxLs4iCqEt7Q-2kcu3NIleIAQeDvyqu3p1hIugIcIR8GgDZFBVxxc&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AS__SBPQYnE1Jce7i0hqa6s&oh=00_AYC7q_TJ0-dqdhCvMPBBHvfKUyMSvUr62h6hO4RHB81OYg&oe=67B52428" },
+      { id: 2, name: "paracetamol 100ml", details: "الكارتون 35 قطعة خصم 10%", price: 64750, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480168753_122143212524425327_4530295752852946217_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=100&ccb=1-7&_nc_sid=833d8c&_nc_ohc=xKpgfyRFPdoQ7kNvgGi-ndQ&_nc_oc=Adh5FRl_fo7MoNG6PiuhHlS_vAFnZ7l35VlOwAb1p3iUDoW3e9ZQZPGmT8KkVxqvHQk&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=ACa6cMSLVD5kNQArtFhsdm9&oh=00_AYD6o0w-KDdnKWSAQhDOn9OzdmOFMKjVmWmVOKey9qtLvw&oe=67B50DE8" },
+      { id: 3, name: "mormal saline500ml", price: 43500, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480117498_122143218710425327_2048530519905519483_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_ohc=XkdQf-XVT0MQ7kNvgEvWe45&_nc_oc=AdhTNsBC3BSZ7GNonhdOKCk4gVTUXfvS_2ipbFyVLHbnz1Jz961tDhWa-L1uxwxuH10&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=ABYgCxxiqjMhez81CqQnXpm&oh=00_AYBdMwmisQKsBFp-JuPuC1h2-mV7z4eIkGUa0FJ6X-AZ6Q&oe=67B5201E" },
+      { id: 5, name: "NORMAL SALINE 100ml هندي", details: "الكارتون 100 قطعة الخصم 10%" , price: 57000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480027415_122143213178425327_5302910512507395408_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=GvMc6ilT-ZoQ7kNvgFTD3Tt&_nc_oc=AdgbplxgHPXpqhUbr-BLsgWF7QIIxUBSqnfKJrrxE7h4f1Iw-FYmZCiLLR2MS6MM-_s&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AViJrlY5ywtxB9LpcfSPGXL&oh=00_AYAch05DYpqbqZxmXvdZNRXoVVSx2fx_uHqrkMpPU94NRA&oe=67B535D9" },
+      { id: 6, name: "Ringer 500ml", details: "الكارتون 30 قطعة ", price: 43500, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480047181_122143213496425327_3433786074011406291_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_ohc=Fqq5Wsb6LVEQ7kNvgGqq07b&_nc_oc=Adi4LFubfA2NHqnl-M9WraSNLCcYbqCQYYZYKwEaLYgiWplt0QbfxnODL0ANWuDhSf8&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AGExSFj3Wi2Iq5udT1-HEvC&oh=00_AYC8B_ZlWNVO9pKQJ-SXzaOQ_zxGA0l_ByN51iF3uYWvjg&oe=67B54566" },
+      { id: 7, name: "جهاز اعطاء سوائل", details: "الكارتون الواحد خصم 5%", price: 90000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480111705_122143213898425327_505076457814959398_n.jpg?stp=dst-jpg_p180x540_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=WLVLO5Hw3MsQ7kNvgGvw5nF&_nc_oc=AdjG8t54Sk4e4xHUMaxyLXYXoYpUSxWHd70rbPfVNoHRGzhQpzqUyJjL8PGhO1jcl_g&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AN_QDTpV_TNc-psOx3DGacn&oh=00_AYB5Z9E7KsNzc1rvMVehoPifylVFKvBID7NCh_erPlDZuw&oe=67B51FEF" },
+      { id: 8, name: "syinge 5cc", details: "الكارتون 24 باكيت خصم 5%", price: 90000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480092751_122143211612425327_2058560408313796475_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=Fd8-q6iyrnAQ7kNvgEv-tH1&_nc_oc=AdjGV-btKBx2jJEFN8QSOv6UZrZqaPycemOsV4tkEmPDvZ8MaW2PaFZ6EmfAPCdQtyg&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AU6SQFQ82kT2Cw7E6FD-bE5&oh=00_AYChorBeVRcqNkAHBMFXhtQVrEaIUMX6gYJK8bDMfK6Cog&oe=67B52820" },
+      { id: 9, name: "syinge pic 1cc", details: "الباكيت", price: 5000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/479731821_122143214156425327_1751375924376876955_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=e9Icc2Nr_9IQ7kNvgEAh0kS&_nc_oc=Adi9mFlk09MTsrIWCVHO8HfZKXwnAAYhSBDWLNercysBu5kMHQ4wm_CLEYweKpuJ6wQ&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AOxN3m6i4fK-ZB-wJCx9y8W&oh=00_AYBouzpX6gAuufZ85CakN7UsfU3_GWat7uY1OXXj_09WYA&oe=67B540F8" },
+      { id: 10, name: "كانيولا خضراء", details: "باكيت 100 قطعة", price: 19000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480103206_122143219496425327_983658103625672085_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=znxi13NGTnQQ7kNvgFb18H6&_nc_oc=AdhXS0LYssj4VAasfbkJP64kiaCA0CayOsme3S5QJz4XAWZW9TCvSjxFO1U88NCGlaQ&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AiWp_PIfxy0BxTEemOiTUPN&oh=00_AYB6PsKosbhqiF-yVl9Vue9IeTLpE--2CkGxztmONL0cEQ&oe=67B52CB7" },
+      { id: 11, name: "حمل test", details: "الباكيت 40 قطعة", price: 7000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/479867229_122143214330425327_9141020820194633164_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=9XF_srKsq6YQ7kNvgH54_wN&_nc_oc=Adg56BiHrLdErjWeweECrDGy2VYbT8Jh4cvPg-kzYHJZ5az-_ALcv-K7ZLzVYu0D0jA&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AD6DUKQ3VLHWeFcw-_ymbMa&oh=00_AYAFIEkOhC6Z93W5uLnqvZ3iYOFhYoVtjxwU5ThMpuQKaw&oe=67B5109D" },
+      { id: 12, name: "لاسق جروح فوجيكا", details: "الكارتون 40 باكيت", price: 2750, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/479691334_122143214582425327_8203050183050514339_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_ohc=Y2BpvwIjkBsQ7kNvgEFPebR&_nc_oc=AdhS1ptRdNKWg3W_pvQ58ymcQ72xVoL9IMTNj8Sk9jCEW8qpcqDAPZaX4tlnPw0ssp8&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AR9ZC-hQmZ97wDJwPD7wtew&oh=00_AYAnmkZqDVa9MLMf_jgc08H1J4CiksENPupjbinQikPzZg&oe=67B51842" },
+      { id: 13, name: "جهاز سكر انكل بلص", price: 16000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480179129_122143214810425327_2896260034375835471_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=meqlu9Bn7GsQ7kNvgHV6ezD&_nc_oc=Adh8uIkMf-0DE3mavwi1C1UCnkbrOT-2vCvNXEeDC5WUSgFo7SQnxxaIrQov0p4RbVI&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=A3nh6eXRR7AiUaHU67JaPnN&oh=00_AYDmLeZhPnIJ_mQ0xtcjj7ryrlUxP_fShfLyDit-TO62Qg&oe=67B54262" },
+      { id: 14, name: "شرايح سكر انكل بلص", details: "سعر الكارتون", price: 410000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480125945_122143214918425327_8574574593012178453_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_ohc=J7lUf9i8kaMQ7kNvgHSZgRY&_nc_oc=AdjWxVnkqo7N49lM4cXgdYKbWInCb34XEnAYnoBaOkMnratIxDz0mEVAMqp4TTyaMHU&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=ABX462Ey8dhjmNyeBCywi8C&oh=00_AYAi75vsQFa1sY_dcy-wP3X_w19WkBodsolIR_XxOAe4Bw&oe=67B52C9A" },
+      { id: 15, name: "Lido plus بخاخ اسنان", details: "سعر القطعة ", price:1600, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480281497_122143220684425327_3411190389084712823_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=LktB01vSI-MQ7kNvgFfknzs&_nc_oc=AdhNEHEHGko7H4hiLaT1DX7UZDPDPmx7_Deid3gzb4B5CLcTdgDl4yjSrwzAgFXYrd0&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=Ayy-cJfLw59EXU98zgPBo0k&oh=00_AYCX-xX3yQpD7NfvK4b54qXbR--z3lPNKc39McUfVdRNqA&oe=67B53D33" },
+      { id: 16, name: "Distilled water 5ml", details: "الكارتون 20 باكيت", price: 260000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/479691298_122143221050425327_6744277068489980243_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=I5nMi3WD_RoQ7kNvgEPJ9Sd&_nc_oc=AdhkrT_wqth-z_DbRDQo4BWeCzQwQMroeeuSRBTerA_fsFQjvWIcZTmRPkbUC6lapig&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=A0wbLDTe3OhcVYexqF1JAlP&oh=00_AYDYMBUHqo-BYvY2Qvx361HsUkpSLbpB8zNT4xNSAvjQOA&oe=67B53DEC" },
+      { id: 17, name: "كانيولا وردية ", details: "الباكيت 100", price: 19000, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/479741578_122143219748425327_1032392706026725996_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_ohc=einI3fF4IP8Q7kNvgEptzCF&_nc_oc=Adi5iP5WFJ_GNO4BZOtFHaJ3trEmMCL3SlDiFg7qvRL52Tysgw0N03Jp6V_BKfyOM5c&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=ATGiFJaV6ioigweuUOey8Jd&oh=00_AYBRsrDS9es_1L2vxD-O3GI21CXoBWepRGyqxxntEkH_bg&oe=67B52037" },
+      { id: 18, name: "كانيولا صفرة", details: " الباكيت 100", price: 19000, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480232175_122143219208425327_5689988929289678187_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_ohc=hwvHiBycHp0Q7kNvgGdPUQt&_nc_oc=AdglPVSetL4cNvB7O6LJmHvSNk95UxsS2W0Cv0_f3FPXDBesVfK1yN7x7TomlayRCLA&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=A9tebeM9qwLWNXcoXKjz_Dn&oh=00_AYCAYinxP6JxZXR8_KVzkeyzs5KLGKYGUm-8UM5vIsasCA&oe=67B5258B" },
+      { id: 19, name: "كانيولا زرقاء", details: "الكارتون 100 قطعة", price: 19000, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480221558_122143215518425327_2388982947456534958_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=zl5EiUBseGcQ7kNvgH7dn-W&_nc_oc=AdgN7EAaYXQMnhopA3t7FXHF3WFs0KQZI2y8zDzsUN1ei49GFfwLE7bu8BFmYAJAQbQ&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=A5x7iv49txHAQhtNpsHMsO1&oh=00_AYBgV_yO_cVJ0yb0cC2hmXMWUeEXPEqBsrnRpMZHW9-25Q&oe=67B524C3" },
+      { id: 20, name: "غرغرة ريستنت", price: 1500, quantity: 0, image: "https://via.placeholder.com/300x200?text=غرغرة+ريستنت" },
+      { id: 21, name: "براسيتول فيال", details: "الكارتون 100 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=براسيتول+فيال" },
+      { id: 22, name: "نومل سلاين 100 مل", details: "الكارتون 100 قطعة", price: 600, quantity: 0, image: "https://via.placeholder.com/300x200?text=نومل+سلاين" },
+      { id: 23, name: "كانونة تنفيس", details: "الكارتون 500 قطعة", price: 90000, quantity: 0, image: "https://via.placeholder.com/300x200?text=كانونة+تنفيس" },
+      { id: 24, name: "نورمل سلاين 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=نورمل+سلاين" },
+      { id: 25, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 26, name: "براسيتول كياس 1000 جرام", details: "سعر الكسي", price: 1300, quantity: 0, image: "https://via.placeholder.com/300x200?text=براسيتول+كياس" }
+    ];
+
+    const productListEl = document.getElementById("product-list");
+    const cartItemsEl = document.getElementById("cart-items");
+    const totalPriceEl = document.getElementById("total-price");
+
+    // دالة لقراءة الصورة من localStorage في حالة وجودها وتحديث الخاصية في كل منتج
+    function loadStoredImages() {
+      products.forEach(product => {
+        const storedImage = localStorage.getItem("productImage_" + product.id);
+        if(storedImage) {
+          product.image = storedImage;
+        }
+      });
+    }
+
+    // دالة لإنشاء بطاقات المنتجات وعرضها على الصفحة
+    function renderProducts() {
+      // أولاً نحمل الصور المخزنة (إن وجدت)
+      loadStoredImages();
+      productListEl.innerHTML = "";
+      products.forEach((product) => {
+        const col = document.createElement("div");
+        col.className = "col-md-4";
+        col.innerHTML = `
+          <div class="card product-card h-100">
+            ${product.image ? `<img id="product-image-${product.id}" src="${product.image}" class="product-image" alt="${product.name}">` : ""}
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">${product.name}</h5>
+              ${product.details ? `<p class="card-text">${product.details}</p>` : ""}
+              <p class="card-text">السعر: ${product.price}</p>
+              <div class="mt-auto">
+                <div class="input-group">
+                  <button class="btn btn-decrement btn-circle" onclick="updateQuantity(${product.id}, -1)">–</button>
+                  <input type="text" id="quantity-${product.id}" class="form-control text-center" style="max-width:60px;" value="${product.quantity}" readonly>
+                  <button class="btn btn-increment btn-circle" onclick="updateQuantity(${product.id}, 1)">+</button>
+                </div>
+                <!-- زر رفع الصورة مع حقل ملف مخفي -->
+                </div>
+                <!-- زر رفع الصورة مع حقل ملف مخفي -->
+               </div>
+                <!-- زر رفع الصورة مع حقل ملف مخفي -->
+                
+              </div>
+            </div>
+          </div>
+        `;
+        productListEl.appendChild(col);
+      });
+    }
+
+    // دالة تحديث كمية المنتج وإعادة رسم السلة
+    function updateQuantity(productId, change) {
+      const product = products.find((p) => p.id === productId);
+      if (!product) return;
+      product.quantity = Math.max(0, product.quantity + change);
+      document.getElementById(`quantity-${product.id}`).value = product.quantity;
+      renderCart();
+    }
+
+    // دالة عرض محتويات السلة وحساب الإجمالي
+    function renderCart() {
+      cartItemsEl.innerHTML = "";
+      let total = 0;
+      products.forEach((product) => {
+        if (product.quantity > 0) {
+          const productTotal = product.quantity * product.price;
+          total += productTotal;
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${product.name}</td>
+            <td>${product.price}</td>
+            <td>${product.quantity}</td>
+            <td>${productTotal}</td>
+          `;
+          cartItemsEl.appendChild(tr);
+        }
+      });
+      totalPriceEl.innerText = total;
+    }
+
+    // دالة التعامل مع رفع الصورة وتخزينها في localStorage
+    function handleImageUpload(event, productId) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const dataUrl = e.target.result;
+          // تحديث الصورة في المنتج والمخزن المحلي
+          const product = products.find(p => p.id === productId);
+          if(product) {
+            product.image = dataUrl;
+          }
+          localStorage.setItem("productImage_" + productId, dataUrl);
+          // تحديث الصورة المعروضة
+          const imageElement = document.getElementById("product-image-" + productId);
+          if(imageElement) {
+            imageElement.src = dataUrl;
+          }
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // دالة إرسال الطلب عبر واتساب مع تجميع كافة المعلومات
+    document.getElementById("send-order").addEventListener("click", function () {
+      const pharmacyName = document.getElementById("pharmacy-name").value.trim();
+      const pharmacyPhone = document.getElementById("pharmacy-phone").value.trim();
+      const pharmacyAddress = document.getElementById("pharmacy-address").value.trim();
+      const pharmacyNotes = document.getElementById("pharmacy-notes").value.trim();
+
+      const hasItems = products.some((p) => p.quantity > 0);
+      if (!hasItems) {
+        alert("يرجى اختيار منتجات من السلة.");
+        return;
+      }
+      if (!pharmacyName || !pharmacyPhone || !pharmacyAddress) {
+        alert("يرجى ملء جميع حقول معلومات الصيدلية.");
+        return;
+      }
+
+      let message = ``;
+
+// إضافة تفاصيل المنتجات
+// عنوان التفاصيل مع فاصل
+message += `📦 **تفاصيل المنتجات**:%0A--------------------------------%0A`;
+
+products.forEach((product, index) => {
+  if (product.quantity > 0) {
+    const productTotal = product.quantity * product.price;
+    message += `
+🛍️ **المنتج ${index + 1}:** ${product.name}%0A
+💰 **السعر:** ${product.price} IQD%0A
+🔢 **الكمية:** ${product.quantity}%0A
+🧮 **الإجمالي:** ${productTotal} IQD%0A
+--------------------------------%0A`;
+  }
+});
+
+
+// حساب المجموع الكلي
+const total = products.reduce((sum, p) => sum + p.quantity * p.price, 0);
+message += `%0A🧾 **المجموع الكلي**: ${total} IQD%0A%0A`;
+
+// إضافة معلومات الصيدلية
+message += `🏥 **معلومات الصيدلية**:%0A`;
+message += `• **الاسم**: ${pharmacyName}%0A`;
+message += `• **رقم الهاتف**: ${pharmacyPhone}%0A`;
+message += `• **العنوان**: ${pharmacyAddress}%0A`;
+
+if (pharmacyNotes) {
+  message += `• **الملاحظات**: ${pharmacyNotes}%0A`;
+}
+
+
+
+
+      // إنشاء رابط واتساب باستخدام رمز الدولة 964 والرقم 7860482876
+      const whatsappNumber = "9647824130002";
+      const url = `https://wa.me/${whatsappNumber}?text=${message}`;
+      window.open(url, "_blank");
+    });
+
+    // عند تحميل الصفحة يتم عرض المنتجات
+    renderProducts();
+  </script>
+</body>
+</html>
