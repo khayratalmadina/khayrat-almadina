@@ -205,11 +205,10 @@
   </div>
 
   <!-- استدعاء Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // مصفوفة المنتجات مع كافة التفاصيل المطلوبة بالإضافة إلى خاصية الصورة
     const products = [
-      { id: 1, name: "Normal saline 100ml", details: " كارتون 100 قطعة خصم 10%", price: 61000, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/479926117_122143212236425327_3376789666129355286_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_ohc=KfwpdnOh60oQ7kNvgHZF984&_nc_oc=AdiB5wkEdLQFICmxLs4iCqEt7Q-2kcu3NIleIAQeDvyqu3p1hIugIcIR8GgDZFBVxxc&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AS__SBPQYnE1Jce7i0hqa6s&oh=00_AYC7q_TJ0-dqdhCvMPBBHvfKUyMSvUr62h6hO4RHB81OYg&oe=67B52428" },
+      { id: 1, name: "Normal saline 100ml", details: " كارتون 100 قطعة خصم 10%", price: 61000, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/479942388_122143344206425327_7650098119962593197_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=vfbkCKBqZiUQ7kNvgGBTbel&_nc_oc=AdiosWe6VAYrOQpDRidGGPOWtEwpHEJgblcumEvJPLcBBmYFxra4bXZWGrHDstY-Rj4&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AoBzvpmuv4Js6zy_bVmmXEn&oh=00_AYBB3nLCdCOl9vuXx3SqCnmGmiwpSFz04hvqJjr8RDluEQ&oe=67B67375" },
       { id: 2, name: "paracetamol 100ml", details: "الكارتون 35 قطعة خصم 10%", price: 64750, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480168753_122143212524425327_4530295752852946217_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=100&ccb=1-7&_nc_sid=833d8c&_nc_ohc=xKpgfyRFPdoQ7kNvgGi-ndQ&_nc_oc=Adh5FRl_fo7MoNG6PiuhHlS_vAFnZ7l35VlOwAb1p3iUDoW3e9ZQZPGmT8KkVxqvHQk&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=ACa6cMSLVD5kNQArtFhsdm9&oh=00_AYD6o0w-KDdnKWSAQhDOn9OzdmOFMKjVmWmVOKey9qtLvw&oe=67B50DE8" },
       { id: 3, name: "mormal saline500ml", price: 43500, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480117498_122143218710425327_2048530519905519483_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_ohc=XkdQf-XVT0MQ7kNvgEvWe45&_nc_oc=AdhTNsBC3BSZ7GNonhdOKCk4gVTUXfvS_2ipbFyVLHbnz1Jz961tDhWa-L1uxwxuH10&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=ABYgCxxiqjMhez81CqQnXpm&oh=00_AYBdMwmisQKsBFp-JuPuC1h2-mV7z4eIkGUa0FJ6X-AZ6Q&oe=67B5201E" },
       { id: 5, name: "NORMAL SALINE 100ml هندي", details: "الكارتون 100 قطعة الخصم 10%" , price: 57000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480027415_122143213178425327_5302910512507395408_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=GvMc6ilT-ZoQ7kNvgFTD3Tt&_nc_oc=AdgbplxgHPXpqhUbr-BLsgWF7QIIxUBSqnfKJrrxE7h4f1Iw-FYmZCiLLR2MS6MM-_s&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AViJrlY5ywtxB9LpcfSPGXL&oh=00_AYAch05DYpqbqZxmXvdZNRXoVVSx2fx_uHqrkMpPU94NRA&oe=67B535D9" },
@@ -233,7 +232,42 @@
       { id: 23, name: "كانونة تنفيس", details: "الكارتون 500 قطعة", price: 90000, quantity: 0, image: "https://via.placeholder.com/300x200?text=كانونة+تنفيس" },
       { id: 24, name: "نورمل سلاين 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=نورمل+سلاين" },
       { id: 25, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
-      { id: 26, name: "براسيتول كياس 1000 جرام", details: "سعر الكسي", price: 1300, quantity: 0, image: "https://via.placeholder.com/300x200?text=براسيتول+كياس" }
+      { id: 26, name: "براسيتول كياس 1000 جرام", details: "سعر الكسي", price: 1300, quantity: 0, image: "https://via.placeholder.com/300x200?text=براسيتول+كياس" },
+      { id: 27, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 28, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 29, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 30, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 31, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 32, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 33, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 34, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 35, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 36, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 37, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 38, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 39, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 40, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 41, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 42, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 43, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 44, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 45, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 46, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 47, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 48, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 49, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 50, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 51, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 52, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 53, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 54, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 55, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 56, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 57, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 58, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 59, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+      { id: 60, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
+
     ];
 
     const productListEl = document.getElementById("product-list");
