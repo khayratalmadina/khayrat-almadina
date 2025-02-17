@@ -9,24 +9,15 @@
   <!-- خط Cairo -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
-
-
-
-body.dark-mode .product-card {
-  background: #34495e; /* لون خلفية مناسب للوضع الليلي */
-  color: #ecf0f1;      /* لون نص واضح */
-}
-
-body.dark-mode .product-card .product-title,
-body.dark-mode .product-card .product-details,
-body.dark-mode .product-card .product-price {
-  color: #ecf0f1;      /* تأكد من وضوح النصوص */
-}
-
-
-
-
-
+    body.dark-mode .product-card {
+      background: #34495e; /* لون خلفية مناسب للوضع الليلي */
+      color: #ecf0f1;      /* لون نص واضح */
+    }
+    body.dark-mode .product-card .product-title,
+    body.dark-mode .product-card .product-details,
+    body.dark-mode .product-card .product-price {
+      color: #ecf0f1;
+    }
     /* المتغيرات الأساسية */
     :root {
       --primary-color: #2980b9;
@@ -120,6 +111,7 @@ body.dark-mode .product-card .product-price {
     .main-content {
       margin-left: 80px;
       padding: 1rem;
+      position: relative;
     }
     header {
       text-align: center;
@@ -133,7 +125,30 @@ body.dark-mode .product-card .product-price {
       font-size: 1rem;
       color: var(--accent-color);
     }
-    /* شبكة المنتجات: 4 بطاقات في الصف */
+    /* شريط البحث (يبدأ بعرض 0 ويتوسع عند النقر) */
+    #search-bar-container {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      overflow: hidden;
+      transition: width 0.5s ease;
+      z-index: 1500;
+    }
+    #search-bar-container.active {
+      width: 80%;
+      max-width: 600px;
+    }
+    #search-bar {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      font-size: 1.2rem;
+      border: 2px solid var(--primary-color);
+      border-radius: 25px;
+      outline: none;
+    }
+    /* شبكة المنتجات */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -271,7 +286,6 @@ body.dark-mode .product-card .product-price {
     .save-btn svg {
       width: 24px;
       height: 24px;
-      /* اللون الافتراضي يكون رمادي */
       fill: #ccc;
       transition: fill 0.3s;
     }
@@ -285,6 +299,15 @@ body.dark-mode .product-card .product-price {
     }
     .animate-heart {
       animation: heartbeat 0.5s ease;
+    }
+    /* أنميشن لزر البحث */
+    @keyframes searchBounce {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .animate-search {
+      animation: searchBounce 0.5s ease;
     }
     /* زر السلة العائم */
     .fab-cart {
@@ -364,6 +387,7 @@ body.dark-mode .product-card .product-price {
       margin-bottom: 0.5rem;
       border-bottom: 1px solid #ddd;
       padding-bottom: 0.3rem;
+      cursor: pointer;
     }
     .cart-total {
       text-align: right;
@@ -388,7 +412,8 @@ body.dark-mode .product-card .product-price {
       margin-bottom: 0.5rem;
     }
     .modal-body,
-    #favorites-content {
+    #favorites-content,
+    #most-sold-content {
       font-size: 1rem;
     }
     /* أنميشن لتبديل أيقونة الوضع (دوران مع تكبير) */
@@ -424,10 +449,18 @@ body.dark-mode .product-card .product-price {
       max-width: 100%;
       max-height: 100%;
     }
+    /* تأثير تمييز بطاقة المنتج عند التوجيه */
+    .highlight {
+      animation: highlightAnim 1s ease;
+    }
+    @keyframes highlightAnim {
+      0% { box-shadow: 0 0 10px yellow; }
+      100% { box-shadow: none; }
+    }
   </style>
 </head>
 <body>
-  <!-- الشريط الجانبي الرأسي -->
+  <!-- الشريط الجانبي الرأسي مع إضافة أزرار البحث والأكثر مبيعا -->
   <div class="sidebar" id="sidebar">
     <!-- زر الهامبرجر (لتوسيع/طي القائمة) -->
     <div class="menu-item" id="toggle-sidebar" title="القائمة">
@@ -443,7 +476,21 @@ body.dark-mode .product-card .product-price {
       </svg>
       <span class="label">الرئيسية</span>
     </div>
-    <!-- زر المحفوظات (يبقى دائماً أيقونة قلب) -->
+    <!-- زر البحث -->
+    <div class="menu-item" id="menu-search" title="بحث">
+      <svg viewBox="0 0 24 24">
+        <path d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span class="label">بحث</span>
+    </div>
+    <!-- زر الأكثر مبيعا (يوضع فوق المحفوظات) -->
+    <div class="menu-item" id="menu-most-sold" title="الأكثر مبيعا">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="var(--primary-color)" stroke-width="2" fill="none"/>
+      </svg>
+      <span class="label">الأكثر مبيعا</span>
+    </div>
+    <!-- زر المحفوظات -->
     <div class="menu-item" id="menu-favorites" title="المحفوظات">
       <svg viewBox="0 0 24 24" data-icon="heart">
         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
@@ -459,6 +506,11 @@ body.dark-mode .product-card .product-price {
       </svg>
       <span class="label">الوضع</span>
     </div>
+  </div>
+  
+  <!-- شريط البحث الذي يتمدد عند النقر على زر البحث -->
+  <div id="search-bar-container">
+    <input type="text" id="search-bar" placeholder="ابحث عن منتج...">
   </div>
   
   <!-- منطقة المحتوى الرئيسية -->
@@ -485,7 +537,7 @@ body.dark-mode .product-card .product-price {
     <div class="modal-content" id="cart-modal-content">
       <button class="modal-close" id="modal-close">&times;</button>
       <div id="modal-dynamic-content">
-        <!-- يتم تعبئة المحتوى ديناميكياً: ملخص السلة أو نموذج الصيدلية -->
+        <!-- يتم تعبئة المحتوى ديناميكياً -->
       </div>
     </div>
   </div>
@@ -496,6 +548,16 @@ body.dark-mode .product-card .product-price {
       <button class="modal-close" id="favorites-modal-close">&times;</button>
       <div id="favorites-content">
         <!-- تُعرض المنتجات المحفوظة هنا -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- نافذة منبثقة للأكثر مبيعا -->
+  <div class="modal-overlay" id="most-sold-modal">
+    <div class="modal-content" id="most-sold-modal-content">
+      <button class="modal-close" id="most-sold-modal-close">&times;</button>
+      <div id="most-sold-content">
+        <!-- تُعرض المنتجات الأكثر مبيعا هنا -->
       </div>
     </div>
   </div>
@@ -512,8 +574,7 @@ body.dark-mode .product-card .product-price {
   <script>
     // دالة التحقق من الرمز قبل عرض الموقع
     (function(){
-      // تعريف 10 رموز صحيحة (يمكنك تعديلها كما تشاء)
-      const validCodes = ["272311", "D4E5F6", "G7H8I9", "J1K2L3", "M4N5O6", "P7Q8R9", "S1T2U3", "V4W5X6", "Y7Z8A9", "B1C2D3"];
+      const validCodes = ["272311", "07730799909", "07736374464", "07802431779", "07822632020", "07854009540", "07804984615", "07852723311", "Y7Z8A9", "B1C2D3"];
       let code = prompt("يرجى إدخال الرمز للوصول إلى الموقع:");
       while (!validCodes.includes(code)) {
         alert("الرمز غير صحيح. الرجاء المحاولة مرة أخرى.");
@@ -554,15 +615,17 @@ body.dark-mode .product-card .product-price {
     let cart = []; // عناصر سلة الشراء [{id, quantity}, ...]
     let savedProducts = JSON.parse(localStorage.getItem("savedProducts")) || [];
   
+    // تحديد المنتجات الأكثر مبيعا (كمثال)
+    const mostSoldProductIds = [2, 5, 7, 10];
+  
     /* === دوال عرض المنتجات === */
-    function renderProducts() {
+    function renderProducts(productArray = products) {
       const grid = document.getElementById("product-grid");
       grid.innerHTML = "";
-      products.forEach(product => {
-        // تم حذف دالة الخصم؛ لن يتم عرض أي شارة خصم
-        
+      productArray.forEach(product => {
         const card = document.createElement("div");
         card.className = "product-card";
+        card.setAttribute("data-product-id", product.id);
         card.innerHTML = `
           <img src="${product.image}" alt="${product.name}" ondblclick="showImageModal('${product.image}')">
           <!-- زر حفظ المنتج (قلب) -->
@@ -648,7 +711,13 @@ body.dark-mode .product-card .product-price {
       setTimeout(() => indicator.remove(), 500);
     }
   
-    /* === دوال النافذة المنبثقة للسلة ونموذج الصيدلية === */
+    /* دالة تصفية المنتجات بناءً على البحث */
+    function filterProducts(query) {
+      const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+      renderProducts(filtered);
+    }
+  
+    /* === دوال النوافذ المنبثقة === */
     function openCartModal() {
       const modalOverlay = document.getElementById("cart-modal");
       const dynamicContent = document.getElementById("modal-dynamic-content");
@@ -666,7 +735,7 @@ body.dark-mode .product-card .product-price {
         const product = products.find(p => p.id === item.id);
         const subTotal = product.price * item.quantity;
         total += subTotal;
-        html += `<div class="cart-item">
+        html += `<div class="cart-item" onclick="scrollToProduct(${product.id})">
           <div>${product.name} (×${item.quantity})</div>
           <div>${subTotal} IQD</div>
         </div>`;
@@ -706,29 +775,39 @@ body.dark-mode .product-card .product-price {
         alert("يرجى ملء جميع الحقول المطلوبة.");
         return;
       }
-      let message = "📦 **تفاصيل الطلب**:%0A";
-      cart.forEach(item => {
-        const product = products.find(p => p.id === item.id);
-        message += `\n🛍️ ${product.name} - الكمية: ${item.quantity} - السعر: ${product.price} IQD`;
-      });
-      const total = cart.reduce((sum, item) => {
-        const product = products.find(p => p.id === item.id);
-        return sum + (product.price * item.quantity);
-      }, 0);
-      message += `\n\n🧾 المجموع الكلي: ${total} IQD`;
-      message += `\n\n🏥 **معلومات الصيدلية**:%0A`;
-      message += `اسم الصيدلية: ${pharmacyName}%0A`;
-      message += `العنوان: ${pharmacyAddress}%0A`;
-      message += `رقم الهاتف: ${pharmacyPhone}%0A`;
-      if (pharmacyNotes) {
-        message += `ملاحظات: ${pharmacyNotes}%0A`;
-      }
+      let message = "� *تفاصيل المنتجات*:%0A";
+cart.forEach((item, index) => {
+  const product = products.find(p => p.id === item.id);
+  const productTotal = product.price * item.quantity;
+  message += "--------------------------------%0A";
+  message += `� *المنتج ${index + 1}:* ${product.name}%0A`;
+  message += `� *السعر:* ${product.price} IQD%0A`;
+  message += `� *الكمية:* ${item.quantity}%0A`;
+  message += `� *الإجمالي:* ${productTotal} IQD%0A`;
+});
+message += "--------------------------------%0A";
+
+const total = cart.reduce((sum, item) => {
+  const product = products.find(p => p.id === item.id);
+  return sum + (product.price * item.quantity);
+}, 0);
+
+message += `%0A� *المجموع الكلي*: ${total} IQD%0A%0A`;
+message += "� *معلومات الصيدلية*:%0A";
+message += `• *الاسم*: ${pharmacyName}%0A`;
+message += `• *رقم الهاتف*: ${pharmacyPhone}%0A`;
+message += `• *العنوان*: ${pharmacyAddress}%0A`;
+if (pharmacyNotes) {
+  message += `• *الملاحظات*: ${pharmacyNotes}%0A`;
+}
+
+      
       const whatsappNumber = "9647824130002";
       const url = `https://wa.me/${whatsappNumber}?text=${message}`;
       window.open(url, "_blank");
     }
   
-    /* === دوال نافذة المحفوظات === */
+    /* دوال المحفوظات */
     function openFavoritesModal() {
       const favModal = document.getElementById("favorites-modal");
       document.getElementById("favorites-content").innerHTML = renderFavorites();
@@ -742,13 +821,46 @@ body.dark-mode .product-card .product-price {
       }
       let html = `<div class="modal-header"><h4>المحفوظات</h4></div><div class="modal-body">`;
       favProducts.forEach(product => {
-        html += `<div class="cart-item">
+        html += `<div class="cart-item" onclick="scrollToProduct(${product.id})">
           <div>${product.name}</div>
           <div>${product.price} IQD</div>
         </div>`;
       });
       html += `</div>`;
       return html;
+    }
+  
+    /* دوال الأكثر مبيعا */
+    function openMostSoldModal() {
+      const modal = document.getElementById("most-sold-modal");
+      document.getElementById("most-sold-content").innerHTML = renderMostSold();
+      modal.classList.add("active");
+    }
+  
+    function renderMostSold() {
+      const mostSold = products.filter(p => mostSoldProductIds.includes(p.id));
+      if (mostSold.length === 0) {
+        return `<div class="modal-header"><h4>لا توجد منتجات</h4></div>`;
+      }
+      let html = `<div class="modal-header"><h4>الأكثر مبيعا</h4></div><div class="modal-body">`;
+      mostSold.forEach(product => {
+        html += `<div class="cart-item" onclick="scrollToProduct(${product.id})">
+          <div>${product.name}</div>
+          <div>${product.price} IQD</div>
+        </div>`;
+      });
+      html += `</div>`;
+      return html;
+    }
+  
+    /* دالة التوجيه لبطاقة المنتج مع تأثير التمييز */
+    function scrollToProduct(productId) {
+      const card = document.querySelector(`.product-card[data-product-id="${productId}"]`);
+      if (card) {
+        card.classList.add("highlight");
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => card.classList.remove("highlight"), 1500);
+      }
     }
   
     /* === أحداث النقر على عناصر الشريط الجانبي === */
@@ -758,20 +870,40 @@ body.dark-mode .product-card .product-price {
     });
   
     document.getElementById("menu-home").addEventListener("click", function() {
-      // إضافة أنميشن لأيقونة الرئيسية
       this.querySelector("svg").classList.add("animate-home");
       setTimeout(() => this.querySelector("svg").classList.remove("animate-home"), 500);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   
-    // عند النقر على أيقونة المحفوظات في الشريط الجانبي، نضيف حركة بسيطة
+    // زر البحث: عند النقر يتم تمديد شريط البحث وتغيير رمز الزر إلى إغلاق مع أنميشن
+    document.getElementById("menu-search").addEventListener("click", function() {
+      this.querySelector("svg").classList.add("animate-search");
+      setTimeout(() => this.querySelector("svg").classList.remove("animate-search"), 500);
+      const searchContainer = document.getElementById("search-bar-container");
+      searchContainer.classList.toggle("active");
+      if(searchContainer.classList.contains("active")){
+        // تغيير رمز البحث إلى رمز الإغلاق (×)
+        this.querySelector("svg").innerHTML = '<line x1="18" y1="6" x2="6" y2="18" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/>';
+        document.getElementById("search-bar").focus();
+      } else {
+        // إعادة رمز البحث الأصلي
+        this.querySelector("svg").innerHTML = '<path d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" fill="none"/>';
+      }
+    });
+  
+    // زر الأكثر مبيعا
+    document.getElementById("menu-most-sold").addEventListener("click", function() {
+      this.querySelector("svg").classList.add("animate-heart");
+      setTimeout(() => this.querySelector("svg").classList.remove("animate-heart"), 500);
+      openMostSoldModal();
+    });
+  
     document.getElementById("menu-favorites").addEventListener("click", function() {
       this.querySelector("svg").classList.add("animate-heart");
       setTimeout(() => this.querySelector("svg").classList.remove("animate-heart"), 500);
       openFavoritesModal();
     });
   
-    // زر تبديل الوضع (قمر/شمس) مع أنميشن
     document.getElementById("menu-darkmode").addEventListener("click", function() {
       const icon = document.getElementById("darkmode-icon");
       icon.classList.add("toggle-animation");
@@ -803,6 +935,9 @@ body.dark-mode .product-card .product-price {
     document.getElementById("favorites-modal-close").addEventListener("click", function() {
       document.getElementById("favorites-modal").classList.remove("active");
     });
+    document.getElementById("most-sold-modal-close").addEventListener("click", function() {
+      document.getElementById("most-sold-modal").classList.remove("active");
+    });
   
     /* دالة عرض نافذة تكبير الصورة عند النقر المزدوج */
     function showImageModal(src) {
@@ -812,6 +947,11 @@ body.dark-mode .product-card .product-price {
     }
     document.getElementById("image-modal-close").addEventListener("click", function() {
       document.getElementById("image-modal").classList.remove("active");
+    });
+  
+    // تفعيل تصفية المنتجات عند الكتابة في شريط البحث
+    document.getElementById("search-bar").addEventListener("keyup", function() {
+      filterProducts(this.value);
     });
   
     /* === تهيئة عرض المنتجات عند تحميل الصفحة === */
