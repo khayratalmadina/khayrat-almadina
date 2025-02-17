@@ -9,9 +9,10 @@
   <!-- خط Cairo -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
+    /* الوضع الليلي */
     body.dark-mode .product-card {
-      background: #34495e; /* لون خلفية مناسب للوضع الليلي */
-      color: #ecf0f1;      /* لون نص واضح */
+      background: #34495e;
+      color: #ecf0f1;
     }
     body.dark-mode .product-card .product-title,
     body.dark-mode .product-card .product-details,
@@ -38,7 +39,6 @@
       background: #2c3e50;
       color: #ecf0f1;
     }
-    /* تأثير الوضع الداكن على الشريط الجانبي والنوافذ */
     body.dark-mode .sidebar {
       background: #34495e;
     }
@@ -57,7 +57,7 @@
       color: #ecf0f1;
       border: 1px solid #555;
     }
-    /* الشريط الجانبي الرأسي */
+    /* الشريط الجانبي */
     .sidebar {
       position: fixed;
       top: 0;
@@ -107,7 +107,7 @@
       height: 24px;
       fill: var(--primary-color);
     }
-    /* منطقة المحتوى الرئيسية */
+    /* منطقة المحتوى */
     .main-content {
       margin-left: 80px;
       padding: 1rem;
@@ -125,34 +125,42 @@
       font-size: 1rem;
       color: var(--accent-color);
     }
-    /* شريط البحث (يبدأ بعرض 0 ويتوسع عند النقر) */
+    /* شريط البحث الذي يتمدد عند النقر */
     #search-bar-container {
       position: fixed;
-      top: 70px;
+      top: 40px; /* رفع المستطيل قليلاً */
       left: 50%;
       transform: translateX(-50%);
       width: 0;
       overflow: hidden;
-      transition: width 0.5s ease;
+      transition: width 0.5s ease-in-out, padding 0.5s ease-in-out;
       z-index: 1500;
     }
     #search-bar-container.active {
-      width: 80%;
-      max-width: 600px;
+      width: 70%;
+      max-width: 400px; /* مستطيل أصغر */
+      padding: 0 10px;
     }
     #search-bar {
       width: 100%;
-      padding: 0.5rem 1rem;
-      font-size: 1.2rem;
+      padding: 0.4rem 0.8rem; /* حجم أصغر */
+      font-size: 1rem;
       border: 2px solid var(--primary-color);
-      border-radius: 25px;
+      border-radius: 20px;
       outline: none;
+      transition: all 0.3s ease-in-out;
     }
     /* شبكة المنتجات */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 1rem;
+    }
+    /* على شاشات الموبايل: جعل كل 4 بطاقات تظهر في صف واحد */
+    @media (max-width: 600px) {
+      .product-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
     }
     .product-card {
       background: #fff;
@@ -195,17 +203,21 @@
       color: var(--primary-color);
       margin-bottom: 0.5rem;
     }
-    /* شارة الخصم */
-    .discount-badge {
+    /* شارة أفضل المبيعات */
+    .best-seller-badge {
       position: absolute;
       top: 0;
       left: 0;
       background: var(--accent-color);
       color: #fff;
-      padding: 0.2rem 0.4rem;
-      border-bottom-right-radius: 5px;
+      padding: 5px 10px;
       font-size: 0.8rem;
       font-weight: bold;
+      border-bottom-right-radius: 10px;
+      z-index: 5;
+    }
+    .best-seller {
+      border: 2px solid var(--accent-color);
     }
     /* أزرار تحديد الكمية */
     .quantity-controls {
@@ -237,7 +249,7 @@
       width: 20px;
       text-align: center;
     }
-    /* مؤشرات الحركة للزر + و - */
+    /* مؤشرات الحركة */
     .indicator {
       pointer-events: none;
       font-size: 2rem;
@@ -262,7 +274,7 @@
       0% { opacity: 1; transform: translateY(0) scale(1); }
       100% { opacity: 0; transform: translateY(30px) scale(1.5); }
     }
-    /* تأثير اهتزاز للزر عند الضغط */
+    /* تأثير الاهتزاز */
     @keyframes shake {
       0% { transform: translate(0, 0); }
       25% { transform: translate(-2px, 0); }
@@ -273,7 +285,7 @@
     .shake {
       animation: shake 0.3s ease;
     }
-    /* زر حفظ المنتج (قلب) مع حركة heartbeat */
+    /* زر حفظ المنتج */
     .save-btn {
       position: absolute;
       top: 10px;
@@ -309,7 +321,7 @@
     .animate-search {
       animation: searchBounce 0.5s ease;
     }
-    /* زر السلة العائم */
+    /* زر السلة العائم (رمز جديد لحقيبة التسوق) */
     .fab-cart {
       position: fixed;
       bottom: 20px;
@@ -332,7 +344,7 @@
     .fab-cart:hover {
       transform: scale(1.1);
     }
-    /* أنماط النافذة المنبثقة (سلة الشراء) */
+    /* نوافذ منبثقة */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -405,7 +417,7 @@
       font-size: 1rem;
       padding: 0.5rem;
     }
-    /* تحسين وضوح النصوص داخل النوافذ */
+    /* تحسين النصوص داخل النوافذ */
     .modal-header h4,
     .modal-header h3 {
       font-size: 1.5rem;
@@ -416,7 +428,7 @@
     #most-sold-content {
       font-size: 1rem;
     }
-    /* أنميشن لتبديل أيقونة الوضع (دوران مع تكبير) */
+    /* أنميشن لتبديل أيقونة الوضع */
     .toggle-animation {
       animation: iconRotate 0.5s ease;
     }
@@ -425,7 +437,7 @@
       50% { transform: rotate(180deg) scale(1.2); }
       100% { transform: rotate(360deg) scale(1); }
     }
-    /* أنميشن لأيقونة الرئيسية */
+    /* أنميشن زر الرئيسية */
     .animate-home {
       animation: homeBounce 0.5s ease;
     }
@@ -434,7 +446,7 @@
       50% { transform: scale(1.2); }
       100% { transform: scale(1); }
     }
-    /* نافذة منبثقة لتكبير صورة المنتج */
+    /* نافذة تكبير الصورة */
     .image-modal-content {
       width: 35vw;
       height: 35vh;
@@ -449,7 +461,7 @@
       max-width: 100%;
       max-height: 100%;
     }
-    /* تأثير تمييز بطاقة المنتج عند التوجيه */
+    /* تمييز بطاقة المنتج عند التوجيه */
     .highlight {
       animation: highlightAnim 1s ease;
     }
@@ -460,9 +472,9 @@
   </style>
 </head>
 <body>
-  <!-- الشريط الجانبي الرأسي مع إضافة أزرار البحث والأكثر مبيعا -->
+  <!-- الشريط الجانبي مع أزرار البحث والأكثر مبيعا والمحفوظات -->
   <div class="sidebar" id="sidebar">
-    <!-- زر الهامبرجر (لتوسيع/طي القائمة) -->
+    <!-- زر الهامبرجر -->
     <div class="menu-item" id="toggle-sidebar" title="القائمة">
       <svg viewBox="0 0 24 24">
         <path d="M3 6h18M3 12h18M3 18h18" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/>
@@ -483,7 +495,7 @@
       </svg>
       <span class="label">بحث</span>
     </div>
-    <!-- زر الأكثر مبيعا (يوضع فوق المحفوظات) -->
+    <!-- زر الأكثر مبيعا -->
     <div class="menu-item" id="menu-most-sold" title="الأكثر مبيعا">
       <svg viewBox="0 0 24 24">
         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="var(--primary-color)" stroke-width="2" fill="none"/>
@@ -499,7 +511,7 @@
       </svg>
       <span class="label">المحفوظات</span>
     </div>
-    <!-- زر تبديل الوضع (ليل/نهار) -->
+    <!-- زر تبديل الوضع -->
     <div class="menu-item" id="menu-darkmode" title="تبديل الوضع">
       <svg id="darkmode-icon" viewBox="0 0 24 24">
         <path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1012 21a9 9 0 009-8.21z"/>
@@ -508,12 +520,12 @@
     </div>
   </div>
   
-  <!-- شريط البحث الذي يتمدد عند النقر على زر البحث -->
+  <!-- شريط البحث الذي يتمدد عند النقر -->
   <div id="search-bar-container">
     <input type="text" id="search-bar" placeholder="ابحث عن منتج...">
   </div>
   
-  <!-- منطقة المحتوى الرئيسية -->
+  <!-- منطقة المحتوى -->
   <div class="main-content">
     <header>
       <h1>khayrat almadina</h1>
@@ -521,48 +533,46 @@
     </header>
     <!-- شبكة المنتجات -->
     <div class="product-grid" id="product-grid">
-      <!-- تُحقن بطاقات المنتجات عبر JavaScript -->
+      <!-- ستُحقن بطاقات المنتجات عبر JavaScript -->
     </div>
   </div>
   
-  <!-- زر السلة العائم -->
+  <!-- زر السلة العائم برمز جديد -->
   <button class="fab-cart" id="fab-cart">
     <svg viewBox="0 0 24 24" width="28" height="28">
-      <path d="M7 4h-2l-3 9v2h2a3 3 0 006 0h6a3 3 0 006 0h2v-2l-3-9h-2" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- مثال على رمز حقيبة تسوق حديثة -->
+      <path d="M6 2l2 2h8l2-2M3 6h18v2H3V6zm2 4h14l-1.5 12h-11L5 10z" fill="#fff"/>
     </svg>
   </button>
   
-  <!-- نافذة منبثقة لسلة الشراء / نموذج معلومات الصيدلية -->
+  <!-- نوافذ منبثقة -->
   <div class="modal-overlay" id="cart-modal">
     <div class="modal-content" id="cart-modal-content">
       <button class="modal-close" id="modal-close">&times;</button>
       <div id="modal-dynamic-content">
-        <!-- يتم تعبئة المحتوى ديناميكياً -->
+        <!-- محتوى النافذة الديناميكي -->
       </div>
     </div>
   </div>
   
-  <!-- نافذة منبثقة للمحفوظات -->
   <div class="modal-overlay" id="favorites-modal">
     <div class="modal-content" id="favorites-modal-content">
       <button class="modal-close" id="favorites-modal-close">&times;</button>
       <div id="favorites-content">
-        <!-- تُعرض المنتجات المحفوظة هنا -->
+        <!-- منتجات المحفوظات -->
       </div>
     </div>
   </div>
   
-  <!-- نافذة منبثقة للأكثر مبيعا -->
   <div class="modal-overlay" id="most-sold-modal">
     <div class="modal-content" id="most-sold-modal-content">
       <button class="modal-close" id="most-sold-modal-close">&times;</button>
       <div id="most-sold-content">
-        <!-- تُعرض المنتجات الأكثر مبيعا هنا -->
+        <!-- منتجات الأكثر مبيعا -->
       </div>
     </div>
   </div>
   
-  <!-- نافذة منبثقة لتكبير صورة المنتج -->
   <div class="modal-overlay" id="image-modal">
     <div class="modal-content image-modal-content">
       <button class="modal-close" id="image-modal-close">&times;</button>
@@ -572,9 +582,9 @@
   
   <!-- سكريبت التحكم -->
   <script>
-    // دالة التحقق من الرمز قبل عرض الموقع
+    // التحقق من الرمز قبل عرض الموقع
     (function(){
-      const validCodes = ["272311", "07730799909", "07736374464", "07802431779", "07822632020", "07854009540", "07804984615", "07852723311", "Y7Z8A9", "B1C2D3"];
+      const validCodes =  ["272311", "07730799909", "07736374464", "07802431779", "07822632020", "07854009540", "07804984615", "07852723311", "Y7Z8A9", "B1C2D3"];
       let code = prompt("يرجى إدخال الرمز للوصول إلى الموقع:");
       while (!validCodes.includes(code)) {
         alert("الرمز غير صحيح. الرجاء المحاولة مرة أخرى.");
@@ -582,12 +592,12 @@
       }
     })();
   
-    /* === بيانات المنتجات والسلة والمحفظات === */
+    /* بيانات المنتجات والسلة والمحفظات */
     const products = [
       { id: 1, name: "نورمل سلاين 100ml", details: " كارتون 100 قطعة خصم 10%", price: 61000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480124735_122143364288425327_2576983287849537910_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=81SCASu4cmMQ7kNvgHRGPfb&_nc_oc=AdiTqCT1UKLNF_7xsZ6Rx5tr0VWsbQc51mHKuqnb5N1YSbap1nqx__sloAD9HXI1MQE&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AadfNKf13j2S9bETlaUvhEr&oh=00_AYCDyEh1qhxi9hbThfcbq4kXbXupPGD-dcU_h19dyfoTNQ&oe=67B6751C" },
       { id: 2, name: "paracetamol 100ml", details: "الكارتون 35 قطعة خصم 10%", price: 64750, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480024026_122143358882425327_593697694774746907_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=2PVqWlNMVqcQ7kNvgGhgFt9&_nc_oc=AdjMdY0Gg8FAj7Z48y_jqZ_ff3nvogkwJtEOtg9HFITFZxNJv4zZlUf2OGsZZstvZjQ&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AtDqeQgtBOUgtHj308FcaoD&oh=00_AYBGSvW8zFbOwz00Pr0NY1GO12ncF89ogpRYdPMwWQxrzA&oe=67B67FE8" },
-      { id: 3, name: "نورمل سلاين 500ml", details: "         ", price: 43500, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480002321_122143350740425327_7940429594012547575_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=B_RF1CO2PIUQ7kNvgHGni1u&_nc_oc=AdiE5ovpxEkbzMgsprah5FpbFjc5Ad3N6gSm4-KxjGrbj2--5zmGn8F-tLIMlBXe8gs&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=ArR4jDbTSv5UoW6dRAk3grk&oh=00_AYCJCI7IlEOfBJLEmj7YLu8GhzsxETcV2_HWRyu84zW4Lg&oe=67B6A6AE" },
-      { id: 5, name: "NORMAL SALINE 100ml هندي", details: "الكارتون 100 قطعة الخصم 10%", price: 57000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480555410_122143351502425327_59173961902824543_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=fyU_huqaAJQQ7kNvgGL8I-2&_nc_oc=AdjIGSDwlJMHX-FtDeH-vE5Ldm3C7mQP7s9GXDaqgOAhakw5O-2ROrh_LTtfCsf5oas&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AuLhxuxUgCICXGF7snLtcwh&oh=00_AYBHlqqXU7yV5aFosO4mZUz7OqTT2qGO_PIao6r4bWCy5w&oe=67B656C2" },
+      { id: 3, name: "نورمل سلاين 500ml",details: "         ", price: 43500, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480002321_122143350740425327_7940429594012547575_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=B_RF1CO2PIUQ7kNvgHGni1u&_nc_oc=AdiE5ovpxEkbzMgsprah5FpbFjc5Ad3N6gSm4-KxjGrbj2--5zmGn8F-tLIMlBXe8gs&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=ArR4jDbTSv5UoW6dRAk3grk&oh=00_AYCJCI7IlEOfBJLEmj7YLu8GhzsxETcV2_HWRyu84zW4Lg&oe=67B6A6AE" },
+      { id: 5, name: "NORMAL SALINE 100ml هندي", details: "الكارتون 100 قطعة الخصم 10%" , price: 57000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480555410_122143351502425327_59173961902824543_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=fyU_huqaAJQQ7kNvgGL8I-2&_nc_oc=AdjIGSDwlJMHX-FtDeH-vE5Ldm3C7mQP7s9GXDaqgOAhakw5O-2ROrh_LTtfCsf5oas&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AuLhxuxUgCICXGF7snLtcwh&oh=00_AYBHlqqXU7yV5aFosO4mZUz7OqTT2qGO_PIao6r4bWCy5w&oe=67B656C2" },
       { id: 6, name: "Ringer 500ml", details: "الكارتون 30 قطعة ", price: 43500, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480047181_122143213496425327_3433786074011406291_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_ohc=Fqq5Wsb6LVEQ7kNvgGqq07b&_nc_oc=Adi4LFubfA2NHqnl-M9WraSNLCcYbqCQYYZYKwEaLYgiWplt0QbfxnODL0ANWuDhSf8&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=A49e-uETQ5U9r-GFgvJs8jX&oh=00_AYDlo8ZDm7-3cK4LdFFB-JHg3zlqk9mdQelv4IPA_J_GbA&oe=67B696E6" },
       { id: 7, name: "جهاز اعطاء سوائل", details: "الكارتون الواحد خصم 5%", price: 90000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480111705_122143213898425327_505076457814959398_n.jpg?stp=dst-jpg_p180x540_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=WLVLO5Hw3MsQ7kNvgGvw5nF&_nc_oc=AdjG8t54Sk4e4xHUMaxyLXYXoYpUSxWHd70rbPfVNoHRGzhQpzqUyJjL8PGhO1jcl_g&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AN_QDTpV_TNc-psOx3DGacn&oh=00_AYB5Z9E7KsNzc1rvMVehoPifylVFKvBID7NCh_erPlDZuw&oe=67B51FEF" },
       { id: 8, name: "syinge 5cc", details: "الكارتون 24 باكيت خصم 5%", price: 90000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480092751_122143211612425327_2058560408313796475_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=Fd8-q6iyrnAQ7kNvgEv-tH1&_nc_oc=AdjGV-btKBx2jJEFN8QSOv6UZrZqaPycemOsV4tkEmPDvZ8MaW2PaFZ6EmfAPCdQtyg&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AU6SQFQ82kT2Cw7E6FD-bE5&oh=00_AYChorBeVRcqNkAHBMFXhtQVrEaIUMX6gYJK8bDMfK6Cog&oe=67B52820" },
@@ -597,7 +607,7 @@
       { id: 12, name: "لاسق جروح فوجيكا", details: "الكارتون 40 باكيت", price: 2750, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/479691334_122143214582425327_8203050183050514339_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_ohc=Y2BpvwIjkBsQ7kNvgEFPebR&_nc_oc=AdhS1ptRdNKWg3W_pvQ58ymcQ72xVoL9IMTNj8Sk9jCEW8qpcqDAPZaX4tlnPw0ssp8&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AR9ZC-hQmZ97wDJwPD7wtew&oh=00_AYAnmkZqDVa9MLMf_jgc08H1J4CiksENPupjbinQikPzZg&oe=67B51842" },
       { id: 13, name: "جهاز سكر انكل بلص", price: 16000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480179129_122143214810425327_2896260034375835471_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=meqlu9Bn7GsQ7kNvgHV6ezD&_nc_oc=Adh8uIkMf-0DE3mavwi1C1UCnkbrOT-2vCvNXEeDC5WUSgFo7SQnxxaIrQov0p4RbVI&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=A3nh6eXRR7AiUaHU67JaPnN&oh=00_AYDmLeZhPnIJ_mQ0xtcjj7ryrlUxP_fShfLyDit-TO62Qg&oe=67B54262" },
       { id: 14, name: "شرائح سكر انكل بلص", details: "الكارتون 100 قطعة ", price: 410000, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480028242_122143450028425327_7473307691865866592_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_ohc=SGl6Hj2phj0Q7kNvgH4fKxE&_nc_oc=AdhogAQFttD7EdhUyDxbRnw9n8JNe2Czk4hGNFqdiZDbnk_yS1GD6MIfjcLn5dAQGSA&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AIftfeabZjNMYOBWht9TXLz&oh=00_AYBxfLgspKl1n2ABtQ6m9Q5Raj-PftoE8yxPAiB8rmZShw&oe=67B7B885" },
-      { id: 15, name: "Lido plus بخاخ اسنان", details: "الكارتون 100 قطعة ", price: 1600, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480195483_122143353458425327_734452982856973169_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_ohc=daOzuoNJGY4Q7kNvgGqSU8o&_nc_oc=AdhLW8HW2PL_BAVs9AtnM76UYIb-652k8f2lkaj1R1YvLBKoZCefbTFTfS1-vD5MWkg&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AJ2b7Fz8tsJJNOtV61HdgRj&oh=00_AYDxJokztM4iQ_s27jsTmv9fPM4i0HFmGMu7OhdTc4CkGw&oe=67B67EE6" },
+      { id: 15, name: "Lido plus بخاخ اسنان", details: "الكارتون 100 قطعة ", price:1600, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480195483_122143353458425327_734452982856973169_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_ohc=daOzuoNJGY4Q7kNvgGqSU8o&_nc_oc=AdhLW8HW2PL_BAVs9AtnM76UYIb-652k8f2lkaj1R1YvLBKoZCefbTFTfS1-vD5MWkg&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AJ2b7Fz8tsJJNOtV61HdgRj&oh=00_AYDxJokztM4iQ_s27jsTmv9fPM4i0HFmGMu7OhdTc4CkGw&oe=67B67EE6" },
       { id: 16, name: "Distilled water 5ml", details: "الكارتون 20 باكيت", price: 260000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/479691298_122143221050425327_6744277068489980243_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=I5nMi3WD_RoQ7kNvgEPJ9Sd&_nc_oc=AdhkrT_wqth-z_DbRDQo4BWeCzQwQMroeeuSRBTerA_fsFQjvWIcZTmRPkbUC6lapig&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=A0wbLDTe3OhcVYexqF1JAlP&oh=00_AYDYMBUHqo-BYvY2Qvx361HsUkpSLbpB8zNT4xNSAvjQOA&oe=67B53DEC" },
       { id: 17, name: "كانيولا وردية ", details: "الباكيت 100", price: 19000, quantity: 0, image: "https://5.imimg.com/data5/SELLER/Default/2022/12/JL/HD/PJ/4260638/nipro-cannula-2--500x500.jpg" },
       { id: 18, name: "كانيولا صفرة", details: " الباكيت 100", price: 19000, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480232175_122143219208425327_5689988929289678187_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_ohc=hwvHiBycHp0Q7kNvgGdPUQt&_nc_oc=AdglPVSetL4cNvB7O6LJmHvSNk95UxsS2W0Cv0_f3FPXDBesVfK1yN7x7TomlayRCLA&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=A9tebeM9qwLWNXcoXKjz_Dn&oh=00_AYCAYinxP6JxZXR8_KVzkeyzs5KLGKYGUm-8UM5vIsasCA&oe=67B5258B" },
@@ -609,26 +619,38 @@
       { id: 24, name: "نورمل سلاين 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=نورمل+سلاين" },
       { id: 25, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
       { id: 26, name: "براسيتول كياس 1000 جرام", details: "سعر الكسي", price: 1300, quantity: 0, image: "https://via.placeholder.com/300x200?text=براسيتول+كياس" },
-      { id: 2222, name: "بربر", details: "كارتون واحد", price: 10000, quantity: 0, image: "https://5.imimg.com/data5/SELLER/Default/2022/12/JL/HD/PJ/4260638/nipro-cannula-2--500x500.jpg" }
+    
+     
+
+
+
+
     ];
+
   
-    let cart = []; // عناصر سلة الشراء [{id, quantity}, ...]
+    let cart = []; // عناصر سلة الشراء
     let savedProducts = JSON.parse(localStorage.getItem("savedProducts")) || [];
   
-    // تحديد المنتجات الأكثر مبيعا (كمثال)
+    // مثال لتحديد المنتجات الأكثر مبيعاً (يمكنك تعديلها)
     const mostSoldProductIds = [2, 5, 7, 10];
   
-    /* === دوال عرض المنتجات === */
+    /* دوال عرض المنتجات */
     function renderProducts(productArray = products) {
       const grid = document.getElementById("product-grid");
       grid.innerHTML = "";
-      productArray.forEach(product => {
+      productArray.forEach((product, index) => {
         const card = document.createElement("div");
         card.className = "product-card";
         card.setAttribute("data-product-id", product.id);
+        let badge = "";
+        // إذا كانت البطاقة من أول خمس، نميزها بإضافة شارة وكلاس
+        if (index < 5) {
+          badge = `<div class="best-seller-badge">الأكثر مبيعاً</div>`;
+          card.classList.add("best-seller");
+        }
         card.innerHTML = `
+          ${badge}
           <img src="${product.image}" alt="${product.name}" ondblclick="showImageModal('${product.image}')">
-          <!-- زر حفظ المنتج (قلب) -->
           <button class="save-btn ${isSaved(product.id) ? 'active' : ''}" onclick="toggleSave(${product.id}, this)">
             <svg viewBox="0 0 24 24">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
@@ -656,7 +678,7 @@
       return savedProducts.includes(productId);
     }
   
-    /* دالة تبديل حفظ المنتج مع حركة heartbeat */
+    /* تبديل حفظ المنتج */
     function toggleSave(productId, btn) {
       if (isSaved(productId)) {
         savedProducts = savedProducts.filter(id => id !== productId);
@@ -670,7 +692,7 @@
       localStorage.setItem("savedProducts", JSON.stringify(savedProducts));
     }
   
-    /* دالة تحديث الكمية مع تأثير حركة المؤشر وهز الزر */
+    /* تحديث الكمية */
     function updateQuantity(productId, change, btn) {
       const qtyEl = document.getElementById("qty-" + productId);
       let currentQty = parseInt(qtyEl.textContent);
@@ -696,7 +718,7 @@
       }
     }
   
-    /* دالة إنشاء وتحريك مؤشر الحركة */
+    /* مؤشر الحركة */
     function animateIndicator(btn, type) {
       const indicator = document.createElement("span");
       indicator.className = "indicator " + (type === 'plus' ? "plus-indicator" : "minus-indicator");
@@ -711,13 +733,13 @@
       setTimeout(() => indicator.remove(), 500);
     }
   
-    /* دالة تصفية المنتجات بناءً على البحث */
+    /* تصفية المنتجات بناءً على البحث */
     function filterProducts(query) {
       const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
       renderProducts(filtered);
     }
   
-    /* === دوال النوافذ المنبثقة === */
+    /* النوافذ المنبثقة */
     function openCartModal() {
       const modalOverlay = document.getElementById("cart-modal");
       const dynamicContent = document.getElementById("modal-dynamic-content");
@@ -733,11 +755,11 @@
       let total = 0;
       cart.forEach(item => {
         const product = products.find(p => p.id === item.id);
-        const subTotal = product.price * item.quantity;
-        total += subTotal;
+        const productTotal = product.price * item.quantity;
+        total += productTotal;
         html += `<div class="cart-item" onclick="scrollToProduct(${product.id})">
           <div>${product.name} (×${item.quantity})</div>
-          <div>${subTotal} IQD</div>
+          <div>${productTotal} IQD</div>
         </div>`;
       });
       html += `</div>
@@ -775,39 +797,39 @@
         alert("يرجى ملء جميع الحقول المطلوبة.");
         return;
       }
+  
       let message = "� *تفاصيل المنتجات*:%0A";
-cart.forEach((item, index) => {
-  const product = products.find(p => p.id === item.id);
-  const productTotal = product.price * item.quantity;
-  message += "--------------------------------%0A";
-  message += `� *المنتج ${index + 1}:* ${product.name}%0A`;
-  message += `� *السعر:* ${product.price} IQD%0A`;
-  message += `� *الكمية:* ${item.quantity}%0A`;
-  message += `� *الإجمالي:* ${productTotal} IQD%0A`;
-});
-message += "--------------------------------%0A";
-
-const total = cart.reduce((sum, item) => {
-  const product = products.find(p => p.id === item.id);
-  return sum + (product.price * item.quantity);
-}, 0);
-
-message += `%0A� *المجموع الكلي*: ${total} IQD%0A%0A`;
-message += "� *معلومات الصيدلية*:%0A";
-message += `• *الاسم*: ${pharmacyName}%0A`;
-message += `• *رقم الهاتف*: ${pharmacyPhone}%0A`;
-message += `• *العنوان*: ${pharmacyAddress}%0A`;
-if (pharmacyNotes) {
-  message += `• *الملاحظات*: ${pharmacyNotes}%0A`;
-}
-
-      
+      cart.forEach((item, index) => {
+        const product = products.find(p => p.id === item.id);
+        const productTotal = product.price * item.quantity;
+        message += "--------------------------------%0A";
+        message += `� *المنتج ${index + 1}:* ${product.name}%0A`;
+        message += `� *السعر:* ${product.price} IQD%0A`;
+        message += `� *الكمية:* ${item.quantity}%0A`;
+        message += `� *الإجمالي:* ${productTotal} IQD%0A`;
+      });
+      message += "--------------------------------%0A";
+  
+      const total = cart.reduce((sum, item) => {
+        const product = products.find(p => p.id === item.id);
+        return sum + (product.price * item.quantity);
+      }, 0);
+  
+      message += `%0A� *المجموع الكلي*: ${total} IQD%0A%0A`;
+      message += "� *معلومات الصيدلية*:%0A";
+      message += `• *الاسم*: ${pharmacyName}%0A`;
+      message += `• *رقم الهاتف*: ${pharmacyPhone}%0A`;
+      message += `• *العنوان*: ${pharmacyAddress}%0A`;
+      if(pharmacyNotes) {
+        message += `• *الملاحظات*: ${pharmacyNotes}%0A`;
+      }
+  
       const whatsappNumber = "9647824130002";
       const url = `https://wa.me/${whatsappNumber}?text=${message}`;
       window.open(url, "_blank");
     }
   
-    /* دوال المحفوظات */
+    /* المحفوظات */
     function openFavoritesModal() {
       const favModal = document.getElementById("favorites-modal");
       document.getElementById("favorites-content").innerHTML = renderFavorites();
@@ -830,7 +852,7 @@ if (pharmacyNotes) {
       return html;
     }
   
-    /* دوال الأكثر مبيعا */
+    /* الأكثر مبيعاً */
     function openMostSoldModal() {
       const modal = document.getElementById("most-sold-modal");
       document.getElementById("most-sold-content").innerHTML = renderMostSold();
@@ -853,7 +875,7 @@ if (pharmacyNotes) {
       return html;
     }
   
-    /* دالة التوجيه لبطاقة المنتج مع تأثير التمييز */
+    /* التوجيه لبطاقة المنتج مع إخفاء النوافذ المنبثقة */
     function scrollToProduct(productId) {
       const card = document.querySelector(`.product-card[data-product-id="${productId}"]`);
       if (card) {
@@ -861,9 +883,11 @@ if (pharmacyNotes) {
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
         setTimeout(() => card.classList.remove("highlight"), 1500);
       }
+      document.getElementById("favorites-modal").classList.remove("active");
+      document.getElementById("most-sold-modal").classList.remove("active");
     }
   
-    /* === أحداث النقر على عناصر الشريط الجانبي === */
+    /* أحداث النقر على عناصر الشريط الجانبي */
     document.getElementById("toggle-sidebar").addEventListener("click", function(e) {
       document.getElementById("sidebar").classList.toggle("expanded");
       e.stopPropagation();
@@ -875,23 +899,19 @@ if (pharmacyNotes) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   
-    // زر البحث: عند النقر يتم تمديد شريط البحث وتغيير رمز الزر إلى إغلاق مع أنميشن
     document.getElementById("menu-search").addEventListener("click", function() {
       this.querySelector("svg").classList.add("animate-search");
       setTimeout(() => this.querySelector("svg").classList.remove("animate-search"), 500);
       const searchContainer = document.getElementById("search-bar-container");
       searchContainer.classList.toggle("active");
       if(searchContainer.classList.contains("active")){
-        // تغيير رمز البحث إلى رمز الإغلاق (×)
         this.querySelector("svg").innerHTML = '<line x1="18" y1="6" x2="6" y2="18" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/>';
         document.getElementById("search-bar").focus();
       } else {
-        // إعادة رمز البحث الأصلي
         this.querySelector("svg").innerHTML = '<path d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" fill="none"/>';
       }
     });
   
-    // زر الأكثر مبيعا
     document.getElementById("menu-most-sold").addEventListener("click", function() {
       this.querySelector("svg").classList.add("animate-heart");
       setTimeout(() => this.querySelector("svg").classList.remove("animate-heart"), 500);
@@ -939,7 +959,6 @@ if (pharmacyNotes) {
       document.getElementById("most-sold-modal").classList.remove("active");
     });
   
-    /* دالة عرض نافذة تكبير الصورة عند النقر المزدوج */
     function showImageModal(src) {
       const modal = document.getElementById("image-modal");
       document.getElementById("modal-image").src = src;
@@ -949,12 +968,10 @@ if (pharmacyNotes) {
       document.getElementById("image-modal").classList.remove("active");
     });
   
-    // تفعيل تصفية المنتجات عند الكتابة في شريط البحث
     document.getElementById("search-bar").addEventListener("keyup", function() {
       filterProducts(this.value);
     });
   
-    /* === تهيئة عرض المنتجات عند تحميل الصفحة === */
     renderProducts();
   </script>
   
