@@ -1,217 +1,532 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>khayrat almadina</title>
-  <!-- استدعاء Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
-  <!-- استدعاء خط Cairo -->
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>khayrat almadina - واجهة رأسية</title>
+  <!-- Bootstrap 5 مع RTL -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <!-- خط Cairo -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
-    /* تعريف متغيرات الألوان */
+
+
+
+body.dark-mode .product-card {
+  background: #34495e; /* لون خلفية مناسب للوضع الليلي */
+  color: #ecf0f1;      /* لون نص واضح */
+}
+
+body.dark-mode .product-card .product-title,
+body.dark-mode .product-card .product-details,
+body.dark-mode .product-card .product-price {
+  color: #ecf0f1;      /* تأكد من وضوح النصوص */
+}
+
+
+
+
+
+    /* المتغيرات الأساسية */
     :root {
-      --primary-color:#2980b9;
+      --primary-color: #2980b9;
       --secondary-color: #27ae60;
-      --danger-color: #e74c3c;
-      --background-gradient: linear-gradient(135deg, #f0f8ff, #e0f7fa);
-      --header-gradient: linear-gradient(90deg, #2980b9, #3498db);
+      --accent-color: #f39c12;
+      --background: #f0f8ff;
+      --sidebar-bg: #fff;
+      --modal-bg: rgba(0,0,0,0.7);
     }
-    /* تنسيق الصفحة العام */
     body {
       font-family: 'Cairo', sans-serif;
-      background: var(--background-gradient);
+      background: var(--background);
       margin: 0;
       padding: 0;
-      color: #2c3e50;
+      transition: background 0.3s ease;
     }
-    /* رأس الصفحة */
+    body.dark-mode {
+      background: #2c3e50;
+      color: #ecf0f1;
+    }
+    /* تأثير الوضع الداكن على الشريط الجانبي والنوافذ */
+    body.dark-mode .sidebar {
+      background: #34495e;
+    }
+    body.dark-mode .sidebar .menu-item svg,
+    body.dark-mode .sidebar .menu-item span.label {
+      fill: #ecf0f1;
+      color: #ecf0f1;
+    }
+    body.dark-mode .modal-content {
+      background: #2c3e50;
+      color: #ecf0f1;
+    }
+    body.dark-mode .pharmacy-form input,
+    body.dark-mode .pharmacy-form textarea {
+      background: #34495e;
+      color: #ecf0f1;
+      border: 1px solid #555;
+    }
+    /* الشريط الجانبي الرأسي */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 70px;
+      height: 100%;
+      background: var(--sidebar-bg);
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem 0;
+      transition: width 0.3s ease;
+      z-index: 1200;
+    }
+    .sidebar.expanded {
+      width: 200px;
+    }
+    .sidebar .menu-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1rem 0;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.3s;
+    }
+    .sidebar .menu-item:hover {
+      background: rgba(0,0,0,0.05);
+    }
+    .sidebar.expanded .menu-item {
+      justify-content: flex-start;
+      padding-left: 1rem;
+    }
+    .sidebar .menu-item span.label {
+      display: none;
+      margin-left: 0.5rem;
+      font-size: 1rem;
+      color: var(--primary-color);
+    }
+    .sidebar.expanded .menu-item span.label {
+      display: inline;
+    }
+    .sidebar .menu-item svg {
+      width: 24px;
+      height: 24px;
+      fill: var(--primary-color);
+    }
+    /* منطقة المحتوى الرئيسية */
+    .main-content {
+      margin-left: 80px;
+      padding: 1rem;
+    }
     header {
-      background: var(--header-gradient);
-      color: #fff;
-      padding: 2rem;
-      border-radius: 10px;
-      margin-bottom: 2rem;
       text-align: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      animation: fadeInDown 1s ease;
+      margin-bottom: 1.5rem;
     }
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
     }
-    /* بطاقات المنتجات */
+    header p {
+      font-size: 1rem;
+      color: var(--accent-color);
+    }
+    /* شبكة المنتجات: 4 بطاقات في الصف */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
     .product-card {
-      border: none;
-      border-radius: 15px;
       background: #fff;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 10px;
       overflow: hidden;
-      animation: fadeInUp 0.8s ease;
-    }
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+      position: relative;
+      display: flex;
+      flex-direction: column;
     }
     .product-card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      transform: translateY(-3px);
     }
-    /* تنسيق صورة المنتج */
-    .product-image {
+    .product-card img {
       width: 100%;
-      height: 325px;
+      height: 150px;
       object-fit: cover;
+      cursor: pointer;
     }
-    /* أزرار الجمع والطرح */
-    .btn-circle {
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      padding: 0;
-      text-align: center;
-      line-height: 40px;
-      font-size: 20px;
-      transition: background-color 0.3s ease, transform 0.3s ease;
+    .product-card .card-body {
+      padding: 0.5rem 0.8rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
-    .btn-decrement {
-      background-color: var(--danger-color);
-      border: none;
-      color: #fff;
+    .product-card .product-title {
+      font-size: 1rem;
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+      position: relative;
     }
-    .btn-decrement:hover {
-      background-color: #c0392b;
-      transform: scale(1.1);
+    .product-card .product-details {
+      font-size: 0.8rem;
+      color: #7f8c8d;
+      margin-bottom: 0.5rem;
     }
-    .btn-increment {
-      background-color: var(--secondary-color);
-      border: none;
-      color: #fff;
-    }
-    .btn-increment:hover {
-      background-color: #1e8449;
-      transform: scale(1.1);
-    }
-    /* زر رفع الصورة */
-    .btn-upload {
+    .product-card .product-price {
       font-size: 0.9rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
     }
-    /* جدول السلة */
-    #cart table {
-      background-color: #fff;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* شارة الخصم */
+    .discount-badge {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: var(--accent-color);
+      color: #fff;
+      padding: 0.2rem 0.4rem;
+      border-bottom-right-radius: 5px;
+      font-size: 0.8rem;
+      font-weight: bold;
     }
-    #cart th,
-    #cart td {
-      vertical-align: middle;
+    /* أزرار تحديد الكمية */
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-top: auto;
+      position: relative;
     }
-    /* تنسيق نموذج معلومات الصيدلية */
-    form#order-form {
+    .quantity-controls button {
+      border: none;
+      background: var(--secondary-color);
+      color: #fff;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+      position: relative;
+      overflow: visible;
+    }
+    .quantity-controls button:hover {
+      background: #1e8449;
+    }
+    .quantity-controls span {
+      font-size: 1rem;
+      width: 20px;
+      text-align: center;
+    }
+    /* مؤشرات الحركة للزر + و - */
+    .indicator {
+      pointer-events: none;
+      font-size: 2rem;
+      font-weight: bold;
+      opacity: 1;
+      position: absolute;
+      z-index: 10;
+    }
+    .plus-indicator {
+      color: green;
+      animation: plusAnim 0.5s ease forwards;
+    }
+    .minus-indicator {
+      color: red;
+      animation: minusAnim 0.5s ease forwards;
+    }
+    @keyframes plusAnim {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-30px) scale(1.5); }
+    }
+    @keyframes minusAnim {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(30px) scale(1.5); }
+    }
+    /* تأثير اهتزاز للزر عند الضغط */
+    @keyframes shake {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(-2px, 0); }
+      50% { transform: translate(2px, 0); }
+      75% { transform: translate(-2px, 0); }
+      100% { transform: translate(0, 0); }
+    }
+    .shake {
+      animation: shake 0.3s ease;
+    }
+    /* زر حفظ المنتج (قلب) مع حركة heartbeat */
+    .save-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .save-btn svg {
+      width: 24px;
+      height: 24px;
+      /* اللون الافتراضي يكون رمادي */
+      fill: #ccc;
+      transition: fill 0.3s;
+    }
+    .save-btn.active svg {
+      fill: red;
+    }
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+    .animate-heart {
+      animation: heartbeat 0.5s ease;
+    }
+    /* زر السلة العائم */
+    .fab-cart {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background: var(--primary-color);
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.5rem;
+      z-index: 1300;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .fab-cart:hover {
+      transform: scale(1.1);
+    }
+    /* أنماط النافذة المنبثقة (سلة الشراء) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--modal-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+      z-index: 1400;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-content {
       background: #fff;
-      padding: 2rem;
       border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+      animation: slideIn 0.3s ease;
+      font-size: 1rem;
+      color: #333;
     }
-    form#order-form input,
-    form#order-form textarea {
-      border-radius: 5px;
-      border: 1px solid #ddd;
+    body.dark-mode .modal-content {
+      background: #2c3e50;
+      color: #ecf0f1;
     }
-    form#order-form input:focus,
-    form#order-form textarea:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
+    @keyframes slideIn {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border: none;
+      background: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    /* ملخص سلة الشراء */
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.3rem;
+    }
+    .cart-total {
+      text-align: right;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+    .btn-purchase {
+      width: 100%;
+      margin-top: 1rem;
+    }
+    /* نموذج معلومات الصيدلية */
+    .pharmacy-form input,
+    .pharmacy-form textarea {
+      margin-bottom: 0.8rem;
+      font-size: 1rem;
+      padding: 0.5rem;
+    }
+    /* تحسين وضوح النصوص داخل النوافذ */
+    .modal-header h4,
+    .modal-header h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .modal-body,
+    #favorites-content {
+      font-size: 1rem;
+    }
+    /* أنميشن لتبديل أيقونة الوضع (دوران مع تكبير) */
+    .toggle-animation {
+      animation: iconRotate 0.5s ease;
+    }
+    @keyframes iconRotate {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.2); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+    /* أنميشن لأيقونة الرئيسية */
+    .animate-home {
+      animation: homeBounce 0.5s ease;
+    }
+    @keyframes homeBounce {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    /* نافذة منبثقة لتكبير صورة المنتج */
+    .image-modal-content {
+      width: 35vw;
+      height: 35vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border-radius: 10px;
+      position: relative;
+    }
+    .image-modal-content img {
+      max-width: 100%;
+      max-height: 100%;
     }
   </style>
 </head>
 <body>
-  <div class="container my-4">
-    <!-- رأس الصفحة -->
-    <header>
-      <h1 class="display-4"><i><b>khayrat almadina</b></i></h1>
-      <p class="lead">لتجارة المستلزمات الطبية ولمواد العامة</p>
-    </header>
-
-    <!-- قائمة المنتجات -->
-    <div id="product-list" class="row g-4">
-      <!-- سيتم إضافة المنتجات ديناميكياً عبر JavaScript -->
+  <!-- الشريط الجانبي الرأسي -->
+  <div class="sidebar" id="sidebar">
+    <!-- زر الهامبرجر (لتوسيع/طي القائمة) -->
+    <div class="menu-item" id="toggle-sidebar" title="القائمة">
+      <svg viewBox="0 0 24 24">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span class="label">القائمة</span>
     </div>
-
-    <hr class="my-5" />
-
-    <!-- سلة الشراء -->
-    <h3 class="mb-3">سلة الشراء</h3>
-    <div id="cart" class="mb-5">
-      <table class="table table-striped">
-        <thead class="table-light">
-          <tr>
-            <th>المنتج</th>
-            <th>السعر</th>
-            <th>الكمية</th>
-            <th>الإجمالي</th>
-          </tr>
-        </thead>
-        <tbody id="cart-items">
-          <!-- سيتم إضافة عناصر السلة هنا -->
-        </tbody>
-        <tfoot>
-          <tr>
-            <th colspan="3" class="text-end">المجموع الكلي</th>
-            <th id="total-price">0</th>
-          </tr>
-        </tfoot>
-      </table>
+    <!-- زر الرئيسية -->
+    <div class="menu-item" id="menu-home" title="الرئيسية">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 3l9 8-3 3-6 6-6-6-3-3 9-8z"/>
+      </svg>
+      <span class="label">الرئيسية</span>
     </div>
-
-    <hr class="my-5" />
-
-    <!-- معلومات الصيدلية -->
-    <h3 class="mb-3">معلومات الصيدلية</h3>
-    <form id="order-form">
-      <div class="mb-3">
-        <label for="pharmacy-name" class="form-label">اسم الصيدلية</label>
-        <input type="text" class="form-control" id="pharmacy-name" required />
-      </div>
-      <div class="mb-3">
-        <label for="pharmacy-phone" class="form-label">رقم الهاتف</label>
-        <input type="text" class="form-control" id="pharmacy-phone" required />
-      </div>
-      <div class="mb-3">
-        <label for="pharmacy-address" class="form-label">العنوان</label>
-        <input type="text" class="form-control" id="pharmacy-address" required />
-      </div>
-      <div class="mb-3">
-        <label for="pharmacy-notes" class="form-label">الملاحظات</label>
-        <textarea class="form-control" id="pharmacy-notes" rows="3"></textarea>
-      </div>
-      <button type="button" id="send-order" class="btn btn-primary w-100 py-2">
-        أرسل الطلب عبر الواتساب
-      </button>
-    </form>
+    <!-- زر المحفوظات (يبقى دائماً أيقونة قلب) -->
+    <div class="menu-item" id="menu-favorites" title="المحفوظات">
+      <svg viewBox="0 0 24 24" data-icon="heart">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+          2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3
+          16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+      <span class="label">المحفوظات</span>
+    </div>
+    <!-- زر تبديل الوضع (ليل/نهار) -->
+    <div class="menu-item" id="menu-darkmode" title="تبديل الوضع">
+      <svg id="darkmode-icon" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1012 21a9 9 0 009-8.21z"/>
+      </svg>
+      <span class="label">الوضع</span>
+    </div>
   </div>
-
-  <!-- استدعاء Bootstrap JS -->
+  
+  <!-- منطقة المحتوى الرئيسية -->
+  <div class="main-content">
+    <header>
+      <h1>khayrat almadina</h1>
+      <p>تسوق طبي مبتكر وعصري</p>
+    </header>
+    <!-- شبكة المنتجات -->
+    <div class="product-grid" id="product-grid">
+      <!-- تُحقن بطاقات المنتجات عبر JavaScript -->
+    </div>
+  </div>
+  
+  <!-- زر السلة العائم -->
+  <button class="fab-cart" id="fab-cart">
+    <svg viewBox="0 0 24 24" width="28" height="28">
+      <path d="M7 4h-2l-3 9v2h2a3 3 0 006 0h6a3 3 0 006 0h2v-2l-3-9h-2" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  
+  <!-- نافذة منبثقة لسلة الشراء / نموذج معلومات الصيدلية -->
+  <div class="modal-overlay" id="cart-modal">
+    <div class="modal-content" id="cart-modal-content">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <div id="modal-dynamic-content">
+        <!-- يتم تعبئة المحتوى ديناميكياً: ملخص السلة أو نموذج الصيدلية -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- نافذة منبثقة للمحفوظات -->
+  <div class="modal-overlay" id="favorites-modal">
+    <div class="modal-content" id="favorites-modal-content">
+      <button class="modal-close" id="favorites-modal-close">&times;</button>
+      <div id="favorites-content">
+        <!-- تُعرض المنتجات المحفوظة هنا -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- نافذة منبثقة لتكبير صورة المنتج -->
+  <div class="modal-overlay" id="image-modal">
+    <div class="modal-content image-modal-content">
+      <button class="modal-close" id="image-modal-close">&times;</button>
+      <img id="modal-image" src="" alt="صورة المنتج">
+    </div>
+  </div>
+  
+  <!-- سكريبت التحكم -->
   <script>
-    // مصفوفة المنتجات مع كافة التفاصيل المطلوبة بالإضافة إلى خاصية الصورة
+    // دالة التحقق من الرمز قبل عرض الموقع
+    (function(){
+      // تعريف 10 رموز صحيحة (يمكنك تعديلها كما تشاء)
+      const validCodes = ["272311", "D4E5F6", "G7H8I9", "J1K2L3", "M4N5O6", "P7Q8R9", "S1T2U3", "V4W5X6", "Y7Z8A9", "B1C2D3"];
+      let code = prompt("يرجى إدخال الرمز للوصول إلى الموقع:");
+      while (!validCodes.includes(code)) {
+        alert("الرمز غير صحيح. الرجاء المحاولة مرة أخرى.");
+        code = prompt("يرجى إدخال الرمز للوصول إلى الموقع:");
+      }
+    })();
+  
+    /* === بيانات المنتجات والسلة والمحفظات === */
     const products = [
       { id: 1, name: "نورمل سلاين 100ml", details: " كارتون 100 قطعة خصم 10%", price: 61000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480124735_122143364288425327_2576983287849537910_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=81SCASu4cmMQ7kNvgHRGPfb&_nc_oc=AdiTqCT1UKLNF_7xsZ6Rx5tr0VWsbQc51mHKuqnb5N1YSbap1nqx__sloAD9HXI1MQE&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AadfNKf13j2S9bETlaUvhEr&oh=00_AYCDyEh1qhxi9hbThfcbq4kXbXupPGD-dcU_h19dyfoTNQ&oe=67B6751C" },
       { id: 2, name: "paracetamol 100ml", details: "الكارتون 35 قطعة خصم 10%", price: 64750, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480024026_122143358882425327_593697694774746907_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=2PVqWlNMVqcQ7kNvgGhgFt9&_nc_oc=AdjMdY0Gg8FAj7Z48y_jqZ_ff3nvogkwJtEOtg9HFITFZxNJv4zZlUf2OGsZZstvZjQ&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AtDqeQgtBOUgtHj308FcaoD&oh=00_AYBGSvW8zFbOwz00Pr0NY1GO12ncF89ogpRYdPMwWQxrzA&oe=67B67FE8" },
-      { id: 3, name: "نورمل سلاين 500ml",details: "         ", price: 43500, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480002321_122143350740425327_7940429594012547575_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=B_RF1CO2PIUQ7kNvgHGni1u&_nc_oc=AdiE5ovpxEkbzMgsprah5FpbFjc5Ad3N6gSm4-KxjGrbj2--5zmGn8F-tLIMlBXe8gs&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=ArR4jDbTSv5UoW6dRAk3grk&oh=00_AYCJCI7IlEOfBJLEmj7YLu8GhzsxETcV2_HWRyu84zW4Lg&oe=67B6A6AE" },
-      { id: 5, name: "NORMAL SALINE 100ml هندي", details: "الكارتون 100 قطعة الخصم 10%" , price: 57000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480555410_122143351502425327_59173961902824543_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=fyU_huqaAJQQ7kNvgGL8I-2&_nc_oc=AdjIGSDwlJMHX-FtDeH-vE5Ldm3C7mQP7s9GXDaqgOAhakw5O-2ROrh_LTtfCsf5oas&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AuLhxuxUgCICXGF7snLtcwh&oh=00_AYBHlqqXU7yV5aFosO4mZUz7OqTT2qGO_PIao6r4bWCy5w&oe=67B656C2" },
+      { id: 3, name: "نورمل سلاين 500ml", details: "         ", price: 43500, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480002321_122143350740425327_7940429594012547575_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=B_RF1CO2PIUQ7kNvgHGni1u&_nc_oc=AdiE5ovpxEkbzMgsprah5FpbFjc5Ad3N6gSm4-KxjGrbj2--5zmGn8F-tLIMlBXe8gs&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=ArR4jDbTSv5UoW6dRAk3grk&oh=00_AYCJCI7IlEOfBJLEmj7YLu8GhzsxETcV2_HWRyu84zW4Lg&oe=67B6A6AE" },
+      { id: 5, name: "NORMAL SALINE 100ml هندي", details: "الكارتون 100 قطعة الخصم 10%", price: 57000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480555410_122143351502425327_59173961902824543_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=fyU_huqaAJQQ7kNvgGL8I-2&_nc_oc=AdjIGSDwlJMHX-FtDeH-vE5Ldm3C7mQP7s9GXDaqgOAhakw5O-2ROrh_LTtfCsf5oas&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AuLhxuxUgCICXGF7snLtcwh&oh=00_AYBHlqqXU7yV5aFosO4mZUz7OqTT2qGO_PIao6r4bWCy5w&oe=67B656C2" },
       { id: 6, name: "Ringer 500ml", details: "الكارتون 30 قطعة ", price: 43500, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480047181_122143213496425327_3433786074011406291_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_ohc=Fqq5Wsb6LVEQ7kNvgGqq07b&_nc_oc=Adi4LFubfA2NHqnl-M9WraSNLCcYbqCQYYZYKwEaLYgiWplt0QbfxnODL0ANWuDhSf8&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=A49e-uETQ5U9r-GFgvJs8jX&oh=00_AYDlo8ZDm7-3cK4LdFFB-JHg3zlqk9mdQelv4IPA_J_GbA&oe=67B696E6" },
       { id: 7, name: "جهاز اعطاء سوائل", details: "الكارتون الواحد خصم 5%", price: 90000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480111705_122143213898425327_505076457814959398_n.jpg?stp=dst-jpg_p180x540_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=WLVLO5Hw3MsQ7kNvgGvw5nF&_nc_oc=AdjG8t54Sk4e4xHUMaxyLXYXoYpUSxWHd70rbPfVNoHRGzhQpzqUyJjL8PGhO1jcl_g&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AN_QDTpV_TNc-psOx3DGacn&oh=00_AYB5Z9E7KsNzc1rvMVehoPifylVFKvBID7NCh_erPlDZuw&oe=67B51FEF" },
       { id: 8, name: "syinge 5cc", details: "الكارتون 24 باكيت خصم 5%", price: 90000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480092751_122143211612425327_2058560408313796475_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_ohc=Fd8-q6iyrnAQ7kNvgEv-tH1&_nc_oc=AdjGV-btKBx2jJEFN8QSOv6UZrZqaPycemOsV4tkEmPDvZ8MaW2PaFZ6EmfAPCdQtyg&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AU6SQFQ82kT2Cw7E6FD-bE5&oh=00_AYChorBeVRcqNkAHBMFXhtQVrEaIUMX6gYJK8bDMfK6Cog&oe=67B52820" },
@@ -221,7 +536,7 @@
       { id: 12, name: "لاسق جروح فوجيكا", details: "الكارتون 40 باكيت", price: 2750, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/479691334_122143214582425327_8203050183050514339_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_ohc=Y2BpvwIjkBsQ7kNvgEFPebR&_nc_oc=AdhS1ptRdNKWg3W_pvQ58ymcQ72xVoL9IMTNj8Sk9jCEW8qpcqDAPZaX4tlnPw0ssp8&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AR9ZC-hQmZ97wDJwPD7wtew&oh=00_AYAnmkZqDVa9MLMf_jgc08H1J4CiksENPupjbinQikPzZg&oe=67B51842" },
       { id: 13, name: "جهاز سكر انكل بلص", price: 16000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480179129_122143214810425327_2896260034375835471_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=meqlu9Bn7GsQ7kNvgHV6ezD&_nc_oc=Adh8uIkMf-0DE3mavwi1C1UCnkbrOT-2vCvNXEeDC5WUSgFo7SQnxxaIrQov0p4RbVI&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=A3nh6eXRR7AiUaHU67JaPnN&oh=00_AYDmLeZhPnIJ_mQ0xtcjj7ryrlUxP_fShfLyDit-TO62Qg&oe=67B54262" },
       { id: 14, name: "شرائح سكر انكل بلص", details: "الكارتون 100 قطعة ", price: 410000, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480028242_122143450028425327_7473307691865866592_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_ohc=SGl6Hj2phj0Q7kNvgH4fKxE&_nc_oc=AdhogAQFttD7EdhUyDxbRnw9n8JNe2Czk4hGNFqdiZDbnk_yS1GD6MIfjcLn5dAQGSA&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AIftfeabZjNMYOBWht9TXLz&oh=00_AYBxfLgspKl1n2ABtQ6m9Q5Raj-PftoE8yxPAiB8rmZShw&oe=67B7B885" },
-      { id: 15, name: "Lido plus بخاخ اسنان", details: "الكارتون 100 قطعة ", price:1600, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480195483_122143353458425327_734452982856973169_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_ohc=daOzuoNJGY4Q7kNvgGqSU8o&_nc_oc=AdhLW8HW2PL_BAVs9AtnM76UYIb-652k8f2lkaj1R1YvLBKoZCefbTFTfS1-vD5MWkg&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AJ2b7Fz8tsJJNOtV61HdgRj&oh=00_AYDxJokztM4iQ_s27jsTmv9fPM4i0HFmGMu7OhdTc4CkGw&oe=67B67EE6" },
+      { id: 15, name: "Lido plus بخاخ اسنان", details: "الكارتون 100 قطعة ", price: 1600, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480195483_122143353458425327_734452982856973169_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_ohc=daOzuoNJGY4Q7kNvgGqSU8o&_nc_oc=AdhLW8HW2PL_BAVs9AtnM76UYIb-652k8f2lkaj1R1YvLBKoZCefbTFTfS1-vD5MWkg&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AJ2b7Fz8tsJJNOtV61HdgRj&oh=00_AYDxJokztM4iQ_s27jsTmv9fPM4i0HFmGMu7OhdTc4CkGw&oe=67B67EE6" },
       { id: 16, name: "Distilled water 5ml", details: "الكارتون 20 باكيت", price: 260000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/479691298_122143221050425327_6744277068489980243_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_ohc=I5nMi3WD_RoQ7kNvgEPJ9Sd&_nc_oc=AdhkrT_wqth-z_DbRDQo4BWeCzQwQMroeeuSRBTerA_fsFQjvWIcZTmRPkbUC6lapig&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=A0wbLDTe3OhcVYexqF1JAlP&oh=00_AYDYMBUHqo-BYvY2Qvx361HsUkpSLbpB8zNT4xNSAvjQOA&oe=67B53DEC" },
       { id: 17, name: "كانيولا وردية ", details: "الباكيت 100", price: 19000, quantity: 0, image: "https://5.imimg.com/data5/SELLER/Default/2022/12/JL/HD/PJ/4260638/nipro-cannula-2--500x500.jpg" },
       { id: 18, name: "كانيولا صفرة", details: " الباكيت 100", price: 19000, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480232175_122143219208425327_5689988929289678187_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_ohc=hwvHiBycHp0Q7kNvgGdPUQt&_nc_oc=AdglPVSetL4cNvB7O6LJmHvSNk95UxsS2W0Cv0_f3FPXDBesVfK1yN7x7TomlayRCLA&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=A9tebeM9qwLWNXcoXKjz_Dn&oh=00_AYCAYinxP6JxZXR8_KVzkeyzs5KLGKYGUm-8UM5vIsasCA&oe=67B5258B" },
@@ -233,210 +548,275 @@
       { id: 24, name: "نورمل سلاين 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=نورمل+سلاين" },
       { id: 25, name: "مغذي رنكر 500 مل", details: "الكارتون 25 قطعة", price: 1450, quantity: 0, image: "https://via.placeholder.com/300x200?text=مغذي+رنكر" },
       { id: 26, name: "براسيتول كياس 1000 جرام", details: "سعر الكسي", price: 1300, quantity: 0, image: "https://via.placeholder.com/300x200?text=براسيتول+كياس" },
-      { id: 27, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 28, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 29, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 30, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 31, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 32, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 33, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 34, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 35, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 36, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 37, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 38, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 39, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 40, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 41, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 42, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 43, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 44, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 45, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 46, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 47, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 48, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 49, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 50, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 51, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 52, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 53, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 54, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 55, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 56, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 57, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " }, 
-      { id: 58, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 59, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-      { id: 60, name: "      ", details: "               ", price:   0     , quantity: 0, image: "            " },
-     
-
-
-
-
+      { id: 2222, name: "بربر", details: "كارتون واحد", price: 10000, quantity: 0, image: "https://5.imimg.com/data5/SELLER/Default/2022/12/JL/HD/PJ/4260638/nipro-cannula-2--500x500.jpg" }
     ];
-
-    const productListEl = document.getElementById("product-list");
-    const cartItemsEl = document.getElementById("cart-items");
-    const totalPriceEl = document.getElementById("total-price");
-
-    // دالة لقراءة الصورة من localStorage في حالة وجودها وتحديث الخاصية في كل منتج
-    function loadStoredImages() {
-      products.forEach(product => {
-        const storedImage = localStorage.getItem("productImage_" + product.id);
-        if(storedImage) {
-          product.image = storedImage;
-        }
-      });
-    }
-
-    // دالة لإنشاء بطاقات المنتجات وعرضها على الصفحة
+  
+    let cart = []; // عناصر سلة الشراء [{id, quantity}, ...]
+    let savedProducts = JSON.parse(localStorage.getItem("savedProducts")) || [];
+  
+    /* === دوال عرض المنتجات === */
     function renderProducts() {
-      // أولاً نحمل الصور المخزنة (إن وجدت)
-      loadStoredImages();
-      productListEl.innerHTML = "";
-      products.forEach((product) => {
-        const col = document.createElement("div");
-        col.className = "col-md-4";
-        col.innerHTML = `
-          <div class="card product-card h-100">
-            ${product.image ? `<img id="product-image-${product.id}" src="${product.image}" class="product-image" alt="${product.name}">` : ""}
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">${product.name}</h5>
-              ${product.details ? `<p class="card-text">${product.details}</p>` : ""}
-              <p class="card-text">السعر: ${product.price}</p>
-              <div class="mt-auto">
-                <div class="input-group">
-                  <button class="btn btn-decrement btn-circle" onclick="updateQuantity(${product.id}, -1)">–</button>
-                  <input type="text" id="quantity-${product.id}" class="form-control text-center" style="max-width:60px;" value="${product.quantity}" readonly>
-                  <button class="btn btn-increment btn-circle" onclick="updateQuantity(${product.id}, 1)">+</button>
-                </div>
-                <!-- زر رفع الصورة مع حقل ملف مخفي -->
-                </div>
-                <!-- زر رفع الصورة مع حقل ملف مخفي -->
-               </div>
-                <!-- زر رفع الصورة مع حقل ملف مخفي -->
-                
-              </div>
+      const grid = document.getElementById("product-grid");
+      grid.innerHTML = "";
+      products.forEach(product => {
+        // تم حذف دالة الخصم؛ لن يتم عرض أي شارة خصم
+        
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" ondblclick="showImageModal('${product.image}')">
+          <!-- زر حفظ المنتج (قلب) -->
+          <button class="save-btn ${isSaved(product.id) ? 'active' : ''}" onclick="toggleSave(${product.id}, this)">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+                2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3
+                16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </button>
+          <div class="card-body">
+            <div class="product-title">${product.name}</div>
+            ${ product.details ? `<div class="product-details">${product.details}</div>` : "" }
+            <div class="product-price">${product.price} IQD</div>
+            <div class="quantity-controls">
+              <button onclick="updateQuantity(${product.id}, -1, this)">-</button>
+              <span id="qty-${product.id}">0</span>
+              <button onclick="updateQuantity(${product.id}, 1, this)">+</button>
             </div>
           </div>
         `;
-        productListEl.appendChild(col);
+        grid.appendChild(card);
       });
     }
-
-    // دالة تحديث كمية المنتج وإعادة رسم السلة
-    function updateQuantity(productId, change) {
-      const product = products.find((p) => p.id === productId);
-      if (!product) return;
-      product.quantity = Math.max(0, product.quantity + change);
-      document.getElementById(`quantity-${product.id}`).value = product.quantity;
-      renderCart();
+  
+    /* التحقق من حفظ المنتج */
+    function isSaved(productId) {
+      return savedProducts.includes(productId);
     }
-
-    // دالة عرض محتويات السلة وحساب الإجمالي
-    function renderCart() {
-      cartItemsEl.innerHTML = "";
+  
+    /* دالة تبديل حفظ المنتج مع حركة heartbeat */
+    function toggleSave(productId, btn) {
+      if (isSaved(productId)) {
+        savedProducts = savedProducts.filter(id => id !== productId);
+        btn.classList.remove("active");
+      } else {
+        savedProducts.push(productId);
+        btn.classList.add("active");
+        btn.classList.add("animate-heart");
+        setTimeout(() => btn.classList.remove("animate-heart"), 500);
+      }
+      localStorage.setItem("savedProducts", JSON.stringify(savedProducts));
+    }
+  
+    /* دالة تحديث الكمية مع تأثير حركة المؤشر وهز الزر */
+    function updateQuantity(productId, change, btn) {
+      const qtyEl = document.getElementById("qty-" + productId);
+      let currentQty = parseInt(qtyEl.textContent);
+      currentQty = Math.max(0, currentQty + change);
+      qtyEl.textContent = currentQty;
+  
+      btn.classList.add("shake");
+      setTimeout(() => btn.classList.remove("shake"), 300);
+  
+      animateIndicator(btn, change > 0 ? 'plus' : 'minus');
+  
+      const existing = cart.find(item => item.id === productId);
+      if (existing) {
+        if (currentQty === 0) {
+          cart = cart.filter(item => item.id !== productId);
+        } else {
+          existing.quantity = currentQty;
+        }
+      } else {
+        if (currentQty > 0) {
+          cart.push({ id: productId, quantity: currentQty });
+        }
+      }
+    }
+  
+    /* دالة إنشاء وتحريك مؤشر الحركة */
+    function animateIndicator(btn, type) {
+      const indicator = document.createElement("span");
+      indicator.className = "indicator " + (type === 'plus' ? "plus-indicator" : "minus-indicator");
+      indicator.textContent = type === 'plus' ? "+" : "-";
+      const container = btn.parentElement;
+      const btnLeft = btn.offsetLeft;
+      const btnTop = btn.offsetTop;
+      const btnCenterX = btnLeft + btn.offsetWidth/2 - 10;
+      indicator.style.left = btnCenterX + "px";
+      indicator.style.top = btnTop + "px";
+      container.appendChild(indicator);
+      setTimeout(() => indicator.remove(), 500);
+    }
+  
+    /* === دوال النافذة المنبثقة للسلة ونموذج الصيدلية === */
+    function openCartModal() {
+      const modalOverlay = document.getElementById("cart-modal");
+      const dynamicContent = document.getElementById("modal-dynamic-content");
+      dynamicContent.innerHTML = renderCartSummary();
+      modalOverlay.classList.add("active");
+    }
+  
+    function renderCartSummary() {
+      if (cart.length === 0) {
+        return `<div class="modal-header"><h4>سلة الشراء فارغة</h4></div>`;
+      }
+      let html = `<div class="modal-header"><h4>ملخص سلة الشراء</h4></div><div class="modal-body">`;
       let total = 0;
-      products.forEach((product) => {
-        if (product.quantity > 0) {
-          const productTotal = product.quantity * product.price;
-          total += productTotal;
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${product.name}</td>
-            <td>${product.price}</td>
-            <td>${product.quantity}</td>
-            <td>${productTotal}</td>
-          `;
-          cartItemsEl.appendChild(tr);
-        }
+      cart.forEach(item => {
+        const product = products.find(p => p.id === item.id);
+        const subTotal = product.price * item.quantity;
+        total += subTotal;
+        html += `<div class="cart-item">
+          <div>${product.name} (×${item.quantity})</div>
+          <div>${subTotal} IQD</div>
+        </div>`;
       });
-      totalPriceEl.innerText = total;
+      html += `</div>
+        <div class="cart-total">المجموع الكلي: ${total} IQD</div>
+        <button class="btn btn-primary btn-purchase" onclick="showPharmacyForm()">شراء</button>`;
+      return html;
     }
-
-    // دالة التعامل مع رفع الصورة وتخزينها في localStorage
-    function handleImageUpload(event, productId) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const dataUrl = e.target.result;
-          // تحديث الصورة في المنتج والمخزن المحلي
-          const product = products.find(p => p.id === productId);
-          if(product) {
-            product.image = dataUrl;
-          }
-          localStorage.setItem("productImage_" + productId, dataUrl);
-          // تحديث الصورة المعروضة
-          const imageElement = document.getElementById("product-image-" + productId);
-          if(imageElement) {
-            imageElement.src = dataUrl;
-          }
-        }
-        reader.readAsDataURL(file);
-      }
+  
+    function showPharmacyForm() {
+      const dynamicContent = document.getElementById("modal-dynamic-content");
+      dynamicContent.innerHTML = `
+        <div class="modal-header"><h4>معلومات الصيدلية</h4></div>
+        <div class="modal-body">
+          <form id="pharmacy-form" class="pharmacy-form">
+            <input type="text" id="pharmacy-name" class="form-control" placeholder="اسم الصيدلية" required>
+            <input type="text" id="pharmacy-address" class="form-control" placeholder="العنوان" required>
+            <input type="text" id="pharmacy-phone" class="form-control" placeholder="رقم الهاتف" required>
+            <textarea id="pharmacy-notes" class="form-control" placeholder="ملاحظات"></textarea>
+            <button type="submit" class="btn btn-success btn-purchase mt-2">أرسل الطلب عبر الواتساب</button>
+          </form>
+        </div>
+      `;
+      document.getElementById("pharmacy-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        sendOrder();
+      });
     }
-
-    // دالة إرسال الطلب عبر واتساب مع تجميع كافة المعلومات
-    document.getElementById("send-order").addEventListener("click", function () {
+  
+    function sendOrder() {
       const pharmacyName = document.getElementById("pharmacy-name").value.trim();
-      const pharmacyPhone = document.getElementById("pharmacy-phone").value.trim();
       const pharmacyAddress = document.getElementById("pharmacy-address").value.trim();
+      const pharmacyPhone = document.getElementById("pharmacy-phone").value.trim();
       const pharmacyNotes = document.getElementById("pharmacy-notes").value.trim();
-
-      const hasItems = products.some((p) => p.quantity > 0);
-      if (!hasItems) {
-        alert("يرجى اختيار منتجات من السلة.");
+      if (!pharmacyName || !pharmacyAddress || !pharmacyPhone) {
+        alert("يرجى ملء جميع الحقول المطلوبة.");
         return;
       }
-      if (!pharmacyName || !pharmacyPhone || !pharmacyAddress) {
-        alert("يرجى ملء جميع حقول معلومات الصيدلية.");
-        return;
+      let message = "📦 **تفاصيل الطلب**:%0A";
+      cart.forEach(item => {
+        const product = products.find(p => p.id === item.id);
+        message += `\n🛍️ ${product.name} - الكمية: ${item.quantity} - السعر: ${product.price} IQD`;
+      });
+      const total = cart.reduce((sum, item) => {
+        const product = products.find(p => p.id === item.id);
+        return sum + (product.price * item.quantity);
+      }, 0);
+      message += `\n\n🧾 المجموع الكلي: ${total} IQD`;
+      message += `\n\n🏥 **معلومات الصيدلية**:%0A`;
+      message += `اسم الصيدلية: ${pharmacyName}%0A`;
+      message += `العنوان: ${pharmacyAddress}%0A`;
+      message += `رقم الهاتف: ${pharmacyPhone}%0A`;
+      if (pharmacyNotes) {
+        message += `ملاحظات: ${pharmacyNotes}%0A`;
       }
-
-      let message = ``;
-
-// إضافة تفاصيل المنتجات
-// عنوان التفاصيل مع فاصل
-message += `📦 **تفاصيل المنتجات**:%0A--------------------------------%0A`;
-
-products.forEach((product, index) => {
-  if (product.quantity > 0) {
-    const productTotal = product.quantity * product.price;
-    message += `
-🛍️ **المنتج ${index + 1}:** ${product.name}%0A
-💰 **السعر:** ${product.price} IQD%0A
-🔢 **الكمية:** ${product.quantity}%0A
-🧮 **الإجمالي:** ${productTotal} IQD%0A
---------------------------------%0A`;
-  }
-});
-
-
-// حساب المجموع الكلي
-const total = products.reduce((sum, p) => sum + p.quantity * p.price, 0);
-message += `%0A🧾 **المجموع الكلي**: ${total} IQD%0A%0A`;
-
-// إضافة معلومات الصيدلية
-message += `🏥 **معلومات الصيدلية**:%0A`;
-message += `• **الاسم**: ${pharmacyName}%0A`;
-message += `• **رقم الهاتف**: ${pharmacyPhone}%0A`;
-message += `• **العنوان**: ${pharmacyAddress}%0A`;
-
-if (pharmacyNotes) {
-  message += `• **الملاحظات**: ${pharmacyNotes}%0A`;
-}
-
-
-
-
-      // إنشاء رابط واتساب باستخدام رمز الدولة 964 والرقم 7860482876
       const whatsappNumber = "9647824130002";
       const url = `https://wa.me/${whatsappNumber}?text=${message}`;
       window.open(url, "_blank");
+    }
+  
+    /* === دوال نافذة المحفوظات === */
+    function openFavoritesModal() {
+      const favModal = document.getElementById("favorites-modal");
+      document.getElementById("favorites-content").innerHTML = renderFavorites();
+      favModal.classList.add("active");
+    }
+  
+    function renderFavorites() {
+      const favProducts = products.filter(p => savedProducts.includes(p.id));
+      if (favProducts.length === 0) {
+        return `<div class="modal-header"><h4>لا توجد منتجات محفوظة</h4></div>`;
+      }
+      let html = `<div class="modal-header"><h4>المحفوظات</h4></div><div class="modal-body">`;
+      favProducts.forEach(product => {
+        html += `<div class="cart-item">
+          <div>${product.name}</div>
+          <div>${product.price} IQD</div>
+        </div>`;
+      });
+      html += `</div>`;
+      return html;
+    }
+  
+    /* === أحداث النقر على عناصر الشريط الجانبي === */
+    document.getElementById("toggle-sidebar").addEventListener("click", function(e) {
+      document.getElementById("sidebar").classList.toggle("expanded");
+      e.stopPropagation();
     });
-
-    // عند تحميل الصفحة يتم عرض المنتجات
+  
+    document.getElementById("menu-home").addEventListener("click", function() {
+      // إضافة أنميشن لأيقونة الرئيسية
+      this.querySelector("svg").classList.add("animate-home");
+      setTimeout(() => this.querySelector("svg").classList.remove("animate-home"), 500);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  
+    // عند النقر على أيقونة المحفوظات في الشريط الجانبي، نضيف حركة بسيطة
+    document.getElementById("menu-favorites").addEventListener("click", function() {
+      this.querySelector("svg").classList.add("animate-heart");
+      setTimeout(() => this.querySelector("svg").classList.remove("animate-heart"), 500);
+      openFavoritesModal();
+    });
+  
+    // زر تبديل الوضع (قمر/شمس) مع أنميشن
+    document.getElementById("menu-darkmode").addEventListener("click", function() {
+      const icon = document.getElementById("darkmode-icon");
+      icon.classList.add("toggle-animation");
+      setTimeout(() => {
+        document.body.classList.toggle("dark-mode");
+        if (document.body.classList.contains("dark-mode")) {
+          icon.innerHTML = `<circle cx="12" cy="12" r="5" fill="var(--primary-color)"/>
+            <g stroke="var(--primary-color)" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="4"/>
+              <line x1="12" y1="20" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/>
+              <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="4" y2="12"/>
+              <line x1="20" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/>
+              <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/>
+            </g>`;
+        } else {
+          icon.innerHTML = `<path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1012 21a9 9 0 009-8.21z" fill="var(--primary-color)"/>`;
+        }
+        icon.classList.remove("toggle-animation");
+      }, 500);
+    });
+  
+    document.getElementById("fab-cart").addEventListener("click", openCartModal);
+    document.getElementById("modal-close").addEventListener("click", function() {
+      document.getElementById("cart-modal").classList.remove("active");
+    });
+    document.getElementById("favorites-modal-close").addEventListener("click", function() {
+      document.getElementById("favorites-modal").classList.remove("active");
+    });
+  
+    /* دالة عرض نافذة تكبير الصورة عند النقر المزدوج */
+    function showImageModal(src) {
+      const modal = document.getElementById("image-modal");
+      document.getElementById("modal-image").src = src;
+      modal.classList.add("active");
+    }
+    document.getElementById("image-modal-close").addEventListener("click", function() {
+      document.getElementById("image-modal").classList.remove("active");
+    });
+  
+    /* === تهيئة عرض المنتجات عند تحميل الصفحة === */
     renderProducts();
   </script>
+  
 </body>
 </html>
