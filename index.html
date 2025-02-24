@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+  <meta name="google-site-verification" content="SXH5ilLpVenffQCJ-U-UHDuTIPLgLRZiEuY8tJVxbII" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>khayrat almadina - واجهة رأسية</title>
@@ -9,7 +10,7 @@
   <!-- خط Cairo -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
-    /* التصميم الأصلي (الدزاين القديم) */
+    /* الوضع الليلي */
     body.dark-mode .product-card {
       background: #34495e;
       color: #ecf0f1;
@@ -19,6 +20,7 @@
     body.dark-mode .product-card .product-price {
       color: #ecf0f1;
     }
+    /* المتغيرات الأساسية */
     :root {
       --primary-color: #2980b9;
       --secondary-color: #27ae60;
@@ -61,7 +63,7 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 50px;  /* تقليل العرض عند الحالة المضغوطة */
+      width: 70px;
       height: 100%;
       background: var(--sidebar-bg);
       box-shadow: 2px 0 8px rgba(0,0,0,0.1);
@@ -70,9 +72,6 @@
       align-items: center;
       padding: 1rem 0;
       transition: width 0.3s ease;
-      /* إضافة حواف دائرية على الجانب الأيمن */
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
       z-index: 1200;
     }
     .sidebar.expanded {
@@ -87,13 +86,6 @@
       cursor: pointer;
       position: relative;
       transition: background 0.3s;
-    }
-    /* زر الهامبرجر نفسه */
-    #toggle-sidebar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      overflow: hidden;
     }
     .sidebar .menu-item:hover {
       background: rgba(0,0,0,0.05);
@@ -116,10 +108,6 @@
       height: 24px;
       fill: var(--primary-color);
     }
-    /* زر الإدارة – سيظهر فقط للمالك */
-    #menu-admin {
-      display: none;
-    }
     /* منطقة المحتوى */
     .main-content {
       margin-left: 80px;
@@ -129,10 +117,6 @@
     header {
       padding: 1rem;
       border-bottom: 1px solid #fffffff1;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
     }
     header h1 {
       font-size: 2rem;
@@ -143,6 +127,7 @@
       color: var(--accent-color);
       margin: 0.5rem 0 0;
     }
+    /* عرض عدد الأعضاء مع أيقونة */
     .member-count {
       background: rgba(217, 223, 221, 0.961);
       padding: 0.2rem 0.5rem;
@@ -155,15 +140,7 @@
     body.dark-mode .member-count {
       background: rgba(255,255,255,0.1);
     }
-    /* عداد الطلبات */
-    .order-counter {
-      background: rgba(52, 152, 219, 0.2);
-      padding: 0.2rem 0.5rem;
-      border-radius: 5px;
-      font-size: 0.9rem;
-      margin-top: 0.5rem;
-    }
-    /* شريط البحث */
+    /* شريط البحث الذي يتمدد عند النقر */
     #search-bar-container {
       position: fixed;
       top: 70px;
@@ -176,17 +153,17 @@
     }
     #search-bar-container.active {
       width: 80%;
-      max-width: 400px;  /* تقليل العرض الأقصى لاسطوانة البحث */
+      max-width: 600px;
     }
-    /* تصغير حجم اسطوانة البحث */
     #search-bar {
       width: 100%;
-      padding: 0.2rem 0.5rem;
-      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      font-size: 1.2rem;
       border: 2px solid var(--primary-color);
-      border-radius: 10px;
+      border-radius: 25px;
       outline: none;
     }
+    /* شبكة المنتجات */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -233,6 +210,7 @@
       color: var(--primary-color);
       margin-bottom: 0.5rem;
     }
+    /* شارة أفضل المبيعات */
     .best-seller-badge {
       position: absolute;
       top: 0;
@@ -245,9 +223,11 @@
       border-bottom-right-radius: 10px;
       z-index: 5;
     }
+    /* يمكنك أيضاً تمييز البطاقة بإضافة حد */
     .best-seller {
       border: 2px solid var(--accent-color);
     }
+    /* أزرار تحديد الكمية */
     .quantity-controls {
       display: flex;
       align-items: center;
@@ -277,6 +257,7 @@
       width: 20px;
       text-align: center;
     }
+    /* مؤشرات الحركة */
     .indicator {
       pointer-events: none;
       font-size: 2rem;
@@ -301,6 +282,7 @@
       0% { opacity: 1; transform: translateY(0) scale(1); }
       100% { opacity: 0; transform: translateY(30px) scale(1.5); }
     }
+    /* تأثير الاهتزاز */
     @keyframes shake {
       0% { transform: translate(0, 0); }
       25% { transform: translate(-2px, 0); }
@@ -311,6 +293,7 @@
     .shake {
       animation: shake 0.3s ease;
     }
+    /* زر حفظ المنتج */
     .save-btn {
       position: absolute;
       top: 10px;
@@ -337,6 +320,7 @@
     .animate-heart {
       animation: heartbeat 0.5s ease;
     }
+    /* أنميشن لزر البحث */
     @keyframes searchBounce {
       0% { transform: scale(1); }
       50% { transform: scale(1.2); }
@@ -345,6 +329,7 @@
     .animate-search {
       animation: searchBounce 0.5s ease;
     }
+    /* زر السلة العائم - تغيير الأيقونة */
     .fab-cart {
       position: fixed;
       bottom: 20px;
@@ -367,6 +352,7 @@
     .fab-cart:hover {
       transform: scale(1.1);
     }
+    /* أنماط النوافذ المنبثقة */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -414,6 +400,7 @@
       font-size: 1.2rem;
       cursor: pointer;
     }
+    /* ملخص سلة الشراء */
     .cart-item {
       display: flex;
       justify-content: space-between;
@@ -431,12 +418,14 @@
       width: 100%;
       margin-top: 1rem;
     }
+    /* نموذج معلومات الصيدلية */
     .pharmacy-form input,
     .pharmacy-form textarea {
       margin-bottom: 0.8rem;
       font-size: 1rem;
       padding: 0.5rem;
     }
+    /* تحسين النصوص داخل النوافذ */
     .modal-header h4,
     .modal-header h3 {
       font-size: 1.5rem;
@@ -447,6 +436,7 @@
     #most-sold-content {
       font-size: 1rem;
     }
+    /* أنميشن لتبديل أيقونة الوضع */
     .toggle-animation {
       animation: iconRotate 0.5s ease;
     }
@@ -455,6 +445,7 @@
       50% { transform: rotate(180deg) scale(1.2); }
       100% { transform: rotate(360deg) scale(1); }
     }
+    /* أنميشن زر الرئيسية */
     .animate-home {
       animation: homeBounce 0.5s ease;
     }
@@ -463,6 +454,7 @@
       50% { transform: scale(1.2); }
       100% { transform: scale(1); }
     }
+    /* نافذة تكبير صورة المنتج */
     .image-modal-content {
       width: 35vw;
       height: 35vh;
@@ -477,6 +469,7 @@
       max-width: 100%;
       max-height: 100%;
     }
+    /* تمييز بطاقة المنتج عند التوجيه */
     .highlight {
       animation: highlightAnim 1s ease;
     }
@@ -484,70 +477,40 @@
       0% { box-shadow: 0 0 10px yellow; }
       100% { box-shadow: none; }
     }
-    /* نافذة إدارة داخلية */
-    #admin-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--modal-bg);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1500;
-    }
-    #admin-modal.active {
-      display: flex;
-    }
-    #admin-modal .admin-content {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 800px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .admin-header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .admin-section {
-      margin-bottom: 20px;
-    }
-    .admin-section h3 {
-      margin-bottom: 10px;
-    }
   </style>
 </head>
 <body>
-  <!-- الشريط الجانبي -->
+  <!-- الشريط الجانبي مع أزرار البحث والأكثر مبيعا والمحفوظات -->
   <div class="sidebar" id="sidebar">
+    <!-- زر الهامبرجر -->
     <div class="menu-item" id="toggle-sidebar" title="القائمة">
       <svg viewBox="0 0 24 24">
         <path d="M3 6h18M3 12h18M3 18h18" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/>
       </svg>
       <span class="label">القائمة</span>
     </div>
+    <!-- زر الرئيسية -->
     <div class="menu-item" id="menu-home" title="الرئيسية">
       <svg viewBox="0 0 24 24">
         <path d="M12 3l9 8-3 3-6 6-6-6-3-3 9-8z"/>
       </svg>
       <span class="label">الرئيسية</span>
     </div>
+    <!-- زر البحث -->
     <div class="menu-item" id="menu-search" title="بحث">
       <svg viewBox="0 0 24 24">
         <path d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" fill="none"/>
       </svg>
       <span class="label">بحث</span>
     </div>
+    <!-- زر الأكثر مبيعا -->
     <div class="menu-item" id="menu-most-sold" title="الأكثر مبيعا">
       <svg viewBox="0 0 24 24">
         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="var(--primary-color)" stroke-width="2" fill="none"/>
       </svg>
       <span class="label">الأكثر مبيعا</span>
     </div>
+    <!-- زر المحفوظات -->
     <div class="menu-item" id="menu-favorites" title="المحفوظات">
       <svg viewBox="0 0 24 24" data-icon="heart">
         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
@@ -556,50 +519,42 @@
       </svg>
       <span class="label">المحفوظات</span>
     </div>
+    <!-- زر تبديل الوضع -->
     <div class="menu-item" id="menu-darkmode" title="تبديل الوضع">
       <svg id="darkmode-icon" viewBox="0 0 24 24">
         <path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1012 21a9 9 0 009-8.21z"/>
       </svg>
       <span class="label">الوضع</span>
     </div>
-    <div class="menu-item" id="menu-admin" title="الإدارة">
-      <svg viewBox="0 0 24 24">
-        <path d="M4 4h16v16H4z" fill="var(--primary-color)"/>
-      </svg>
-      <span class="label">الإدارة</span>
-    </div>
   </div>
   
-  <!-- شريط البحث -->
+  <!-- شريط البحث الذي يتمدد عند النقر -->
   <div id="search-bar-container">
     <input type="text" id="search-bar" placeholder="ابحث عن منتج...">
   </div>
   
-  <!-- الواجهة الرئيسية -->
+  <!-- منطقة المحتوى -->
   <div class="main-content">
     <header>
-      <div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
         <h1><i><b>مكتب قمة الرافدين العلمي</b></i></h1>
-        <p><i><b>خصم على القائمة 10%</b></i></p>
-      </div>
-      <div>
-        <div class="member-count d-inline-block me-3">
+        <!-- عرض عدد الأعضاء مع أيقونة -->
+        <div class="member-count">
           <svg width="24" height="24" viewBox="0 0 24 24">
             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
           </svg>
           <span id="member-count"></span>
         </div>
-        <div class="order-counter d-inline-block">
-          طلبات: <span id="order-count">0</span>
-        </div>
       </div>
+      <p><i><b>خصم على القائمة 10%</b></i></p>
     </header>
+    <!-- شبكة المنتجات -->
     <div class="product-grid" id="product-grid">
-      <!-- بطاقات المنتجات ستُحقن هنا بواسطة الجافاسكريبت -->
+      <!-- تُحقن بطاقات المنتجات عبر JavaScript -->
     </div>
   </div>
   
-  <!-- زر السلة العائم -->
+  <!-- زر السلة العائم مع رمز جديد (مثال على أيقونة حقيبة التسوق) -->
   <button class="fab-cart" id="fab-cart">
     <svg viewBox="0 0 24 24" width="28" height="28">
       <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 
@@ -611,25 +566,34 @@
     </svg>
   </button>
   
-  <!-- النوافذ المنبثقة -->
+  <!-- نوافذ منبثقة: سلة الشراء، المحفوظات، الأكثر مبيعا، وتكبير صورة المنتج -->
   <div class="modal-overlay" id="cart-modal">
     <div class="modal-content" id="cart-modal-content">
       <button class="modal-close" id="modal-close">&times;</button>
-      <div id="modal-dynamic-content"></div>
+      <div id="modal-dynamic-content">
+        <!-- محتوى النافذة الديناميكي -->
+      </div>
     </div>
   </div>
+  
   <div class="modal-overlay" id="favorites-modal">
     <div class="modal-content" id="favorites-modal-content">
       <button class="modal-close" id="favorites-modal-close">&times;</button>
-      <div id="favorites-content"></div>
+      <div id="favorites-content">
+        <!-- منتجات المحفوظات -->
+      </div>
     </div>
   </div>
+  
   <div class="modal-overlay" id="most-sold-modal">
     <div class="modal-content" id="most-sold-modal-content">
       <button class="modal-close" id="most-sold-modal-close">&times;</button>
-      <div id="most-sold-content"></div>
+      <div id="most-sold-content">
+        <!-- منتجات الأكثر مبيعا -->
+      </div>
     </div>
   </div>
+  
   <div class="modal-overlay" id="image-modal">
     <div class="modal-content image-modal-content">
       <button class="modal-close" id="image-modal-close">&times;</button>
@@ -637,71 +601,21 @@
     </div>
   </div>
   
-  <!-- نافذة إدارة داخلية -->
-  <div id="admin-modal">
-    <div class="admin-content">
-      <div class="admin-header">
-        <h1>لوحة الإدارة</h1>
-        <button id="admin-close" class="btn btn-secondary">خروج</button>
-      </div>
-      <div class="admin-section">
-        <h3>إضافة منتج جديد</h3>
-        <form id="add-product-form">
-          <div class="mb-3">
-            <label for="product-name" class="form-label">اسم المنتج</label>
-            <input type="text" class="form-control" id="product-name" required>
-          </div>
-          <div class="mb-3">
-            <label for="product-details" class="form-label">تفاصيل المنتج</label>
-            <input type="text" class="form-control" id="product-details">
-          </div>
-          <div class="mb-3">
-            <label for="product-price" class="form-label">السعر (IQD)</label>
-            <input type="number" class="form-control" id="product-price" required>
-          </div>
-          <div class="mb-3">
-            <label for="product-image" class="form-label">رابط صورة المنتج</label>
-            <input type="text" class="form-control" id="product-image" required>
-          </div>
-          <button type="submit" class="btn btn-primary">أضف المنتج</button>
-        </form>
-      </div>
-      <div class="admin-section">
-        <h3>المنتجات المضافة</h3>
-        <div id="admin-product-list"></div>
-      </div>
-      <div class="admin-section">
-        <h3>إدارة الرموز</h3>
-        <form id="add-code-form" class="mb-3">
-          <div class="mb-3">
-            <label for="new-code" class="form-label">أضف رمز جديد</label>
-            <input type="text" class="form-control" id="new-code" required>
-          </div>
-          <button type="submit" class="btn btn-primary">أضف الرمز</button>
-        </form>
-        <div id="code-list"></div>
-      </div>
-    </div>
-  </div>
-  
+  <!-- سكريبت التحكم -->
   <script>
-    /* تعديل التحقق من الرمز الرئيسي بحيث تُقرأ الرموز من localStorage */
+    /* تعريف الرموز (validCodes) في النطاق العام حتى نتمكن من استخدامها لحساب عدد الأعضاء */
+    const validCodes = ["272311", "07730799909", "07736374464", "07802431779", "07822632020", "07854009540", "07804984615", "07737530689", "0000"];
+  
+    // التحقق من الرمز قبل عرض الموقع
     (function(){
-      let validCodesAdmin = JSON.parse(localStorage.getItem("validCodesAdmin")) || ["272311","07730799909","07736374464","07802431779","07822632020","07854009540","07804984615","07737530689","0000"];
       let code = prompt("يرجى إدخال الرمز للوصول إلى الموقع:");
-      while (!validCodesAdmin.includes(code)) {
+      while (!validCodes.includes(code)) {
         alert("الرمز غير صحيح. الرجاء المحاولة مرة أخرى.");
         code = prompt("يرجى إدخال الرمز للوصول إلى الموقع:");
       }
-      currentUserCode = code;
-      localStorage.setItem("currentUserCode", currentUserCode);
     })();
-    
-    if(currentUserCode === "272311") {
-      document.getElementById("menu-admin").style.display = "flex";
-    }
-    
-    /* بيانات المنتجات الثابتة */
+  
+    /* بيانات المنتجات والسلة والمحفظات */
     const products = [
       { id: 1, name: "نورمل سلاين 100ml", details: " كارتون 100 قطعة", price: 65000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480124735_122143364288425327_2576983287849537910_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=81SCASu4cmMQ7kNvgHRGPfb&_nc_oc=AdiTqCT1UKLNF_7xsZ6Rx5tr0VWsbQc51mHKuqnb5N1YSbap1nqx__sloAD9HXI1MQE&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AadfNKf13j2S9bETlaUvhEr&oh=00_AYCDyEh1qhxi9hbThfcbq4kXbXupPGD-dcU_h19dyfoTNQ&oe=67B6751C" },
       { id: 2, name: "paracetamol 100ml", details: "سعر البطل " , price: 1600, quantity: 0, image: "https://scontent.fnjf1-4.fna.fbcdn.net/v/t39.30808-6/480024026_122143358882425327_593697694774746907_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=2PVqWlNMVqcQ7kNvgGhgFt9&_nc_oc=AdjMdY0Gg8FAj7Z48y_jqZ_ff3nvogkwJtEOtg9HFITFZxNJv4zZlUf2OGsZZstvZjQ&_nc_zt=23&_nc_ht=scontent.fnjf1-4.fna&_nc_gid=AtDqeQgtBOUgtHj308FcaoD&oh=00_AYBGSvW8zFbOwz00Pr0NY1GO12ncF89ogpRYdPMwWQxrzA&oe=67B67FE8" },
@@ -728,19 +642,14 @@
       { id: 24, name: "كريم تكبير ارداف وصدر ", details: " الدرزن 12 قطعة 3000", price: 48000, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480290150_122143629344425327_6555396395215924089_n.jpg?stp=dst-jpg_s1080x2048_tt6&_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_ohc=1RRTS03-fk8Q7kNvgH8w7D5&_nc_oc=Adh5HKvXQLAKMZamxJBqN03ptNb67v4a0rFQC1hB3Ja7eSYAKwnvkQ5xmWZtqLnrmw8&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AI5rUuL91eweGRbs7HILe2A&oh=00_AYBJVlu1HGyG12CBQL_nhj0QmneFf5xhqUhL89QrJ5GrpQ&oe=67B965BF" },
       { id: 24, name: "فلاجين فيال ", details: " سعر البطل ", price: 1600, quantity: 0, image: "https://scontent.fnjf1-2.fna.fbcdn.net/v/t39.30808-6/480571694_122144191214425327_2679441621707351809_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=100&ccb=1-7&_nc_sid=833d8c&_nc_ohc=Ed9wdN0KE2wQ7kNvgFRDKal&_nc_oc=Adg2UlGbBEG52UktB6Le86B3riMP6J0Z7GG-9gHZtUKcHNwN1gukSQjieq2mrYep7C8&_nc_zt=23&_nc_ht=scontent.fnjf1-2.fna&_nc_gid=AMyTVkggM9o6m6_KlhGP5IN&oh=00_AYChHmt4X3hHEexpQ7BHMgf2VdRhrzGEgbqPXk3sOWj2kg&oe=67BE377D" },
     ];
-    
-    // دمج المنتجات المضافة من الواجهة الإدارية
-    const adminProducts = JSON.parse(localStorage.getItem("adminProducts")) || [];
-    adminProducts.forEach(prod => {
-      if (!products.some(p => p.id === prod.id)) {
-        products.push(prod);
-      }
-    });
-    
-    let cart = [];
+  
+    let cart = []; // عناصر سلة الشراء
     let savedProducts = JSON.parse(localStorage.getItem("savedProducts")) || [];
+  
+    // (مثال لتحديد المنتجات الأكثر مبيعاً إذا رغبت)
     const mostSoldProductIds = [2, 5, 7, 10];
-    
+  
+    /* دوال عرض المنتجات */
     function renderProducts(productArray = products) {
       const grid = document.getElementById("product-grid");
       grid.innerHTML = "";
@@ -748,6 +657,7 @@
         const card = document.createElement("div");
         card.className = "product-card";
         card.setAttribute("data-product-id", product.id);
+        // إذا كانت البطاقة من أول خمس، نضيف شارة ونسميها best-seller
         let badge = "";
         if (index < 5) {
           badge = `<div class="best-seller-badge">الأكثر مبيعاً</div>`;
@@ -756,6 +666,7 @@
         card.innerHTML = `
           ${badge}
           <img src="${product.image}" alt="${product.name}" ondblclick="showImageModal('${product.image}')">
+          <!-- زر حفظ المنتج -->
           <button class="save-btn ${isSaved(product.id) ? 'active' : ''}" onclick="toggleSave(${product.id}, this)">
             <svg viewBox="0 0 24 24">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
@@ -777,11 +688,13 @@
         grid.appendChild(card);
       });
     }
-    
+  
+    /* التحقق من حفظ المنتج */
     function isSaved(productId) {
       return savedProducts.includes(productId);
     }
-    
+  
+    /* تبديل حفظ المنتج */
     function toggleSave(productId, btn) {
       if (isSaved(productId)) {
         savedProducts = savedProducts.filter(id => id !== productId);
@@ -794,15 +707,19 @@
       }
       localStorage.setItem("savedProducts", JSON.stringify(savedProducts));
     }
-    
+  
+    /* تحديث الكمية */
     function updateQuantity(productId, change, btn) {
       const qtyEl = document.getElementById("qty-" + productId);
       let currentQty = parseInt(qtyEl.textContent);
       currentQty = Math.max(0, currentQty + change);
       qtyEl.textContent = currentQty;
+  
       btn.classList.add("shake");
       setTimeout(() => btn.classList.remove("shake"), 300);
+  
       animateIndicator(btn, change > 0 ? 'plus' : 'minus');
+  
       const existing = cart.find(item => item.id === productId);
       if (existing) {
         if (currentQty === 0) {
@@ -816,7 +733,8 @@
         }
       }
     }
-    
+  
+    /* إنشاء مؤشر الحركة */
     function animateIndicator(btn, type) {
       const indicator = document.createElement("span");
       indicator.className = "indicator " + (type === 'plus' ? "plus-indicator" : "minus-indicator");
@@ -830,19 +748,21 @@
       container.appendChild(indicator);
       setTimeout(() => indicator.remove(), 500);
     }
-    
+  
+    /* تصفية المنتجات بناءً على البحث */
     function filterProducts(query) {
       const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
       renderProducts(filtered);
     }
-    
+  
+    /* نوافذ منبثقة */
     function openCartModal() {
       const modalOverlay = document.getElementById("cart-modal");
       const dynamicContent = document.getElementById("modal-dynamic-content");
       dynamicContent.innerHTML = renderCartSummary();
       modalOverlay.classList.add("active");
     }
-    
+  
     function renderCartSummary() {
       if (cart.length === 0) {
         return `<div class="modal-header"><h4>سلة الشراء فارغة</h4></div>`;
@@ -863,7 +783,7 @@
         <button class="btn btn-primary btn-purchase" onclick="showPharmacyForm()">شراء</button>`;
       return html;
     }
-    
+  
     function showPharmacyForm() {
       const dynamicContent = document.getElementById("modal-dynamic-content");
       dynamicContent.innerHTML = `
@@ -883,58 +803,69 @@
         sendOrder();
       });
     }
-    
-    let whatsappWindow = null;
-    function sendOrder() {
-      const pharmacyName = document.getElementById("pharmacy-name").value.trim();
-      const pharmacyAddress = document.getElementById("pharmacy-address").value.trim();
-      const pharmacyPhone = document.getElementById("pharmacy-phone").value.trim();
-      const pharmacyNotes = document.getElementById("pharmacy-notes").value.trim();
-      if (!pharmacyName || !pharmacyAddress || !pharmacyPhone) {
-        alert("يرجى ملء جميع الحقول المطلوبة.");
-        return;
-      }
-      let message = "� *تفاصيل المنتجات*:%0A";
-      cart.forEach((item, index) => {
-        const product = products.find(p => p.id === item.id);
-        const productTotal = product.price * item.quantity;
-        message += "--------------------------------%0A";
-        message += `� *المنتج ${index + 1}:* ${product.name}%0A`;
-        message += `� *السعر:* ${product.price} IQD%0A`;
-        message += `� *الكمية:* ${item.quantity}%0A`;
-        message += `� *الإجمالي:* ${productTotal} IQD%0A`;
-      });
-      message += "--------------------------------%0A";
-      const total = cart.reduce((sum, item) => {
-        const product = products.find(p => p.id === item.id);
-        return sum + (product.price * item.quantity);
-      }, 0);
-      message += `%0A� *المجموع الكلي*: ${total} IQD%0A%0A`;
-      message += "� *معلومات الصيدلية *:%0A";
-      message += `• *الاسم*: ${pharmacyName}%0A`;
-      message += `• *رقم الهاتف*: ${pharmacyPhone}%0A`;
-      message += `• *العنوان*: ${pharmacyAddress}%0A`;
-      if(pharmacyNotes) {
-        message += `• *الملاحظات*: ${pharmacyNotes}%0A`;
-      }
-      const whatsappNumber = "9647824130002";
-      const url = `https://wa.me/${whatsappNumber}?text=${message}`;
-      let orderCount = parseInt(localStorage.getItem("orderCount") || "0");
-      orderCount++;
-      localStorage.setItem("orderCount", orderCount);
-      document.getElementById("order-count").textContent = orderCount;
-      if (whatsappWindow && !whatsappWindow.closed) {
-        whatsappWindow.close();
-      }
-      whatsappWindow = window.open(url, "_blank");
-    }
-    
+  
+    // في بداية السكريبت، عرف متغيراً لتخزين مرجع النافذة المفتوحة
+// تعريف متغير لتخزين مرجع نافذة واتساب المفتوحة
+let whatsappWindow = null;
+
+function sendOrder() {
+  const pharmacyName = document.getElementById("pharmacy-name").value.trim();
+  const pharmacyAddress = document.getElementById("pharmacy-address").value.trim();
+  const pharmacyPhone = document.getElementById("pharmacy-phone").value.trim();
+  const pharmacyNotes = document.getElementById("pharmacy-notes").value.trim();
+
+  if (!pharmacyName || !pharmacyAddress || !pharmacyPhone) {
+    alert("يرجى ملء جميع الحقول المطلوبة.");
+    return;
+  }
+
+  // بناء الرسالة التي ستُرسل إلى الواتس
+  let message = "� *تفاصيل المنتجات*:%0A";
+  cart.forEach((item, index) => {
+    const product = products.find(p => p.id === item.id);
+    const productTotal = product.price * item.quantity;
+    message += "--------------------------------%0A";
+    message += `� *المنتج ${index + 1}:* ${product.name}%0A`;
+    message += `� *السعر:* ${product.price} IQD%0A`;
+    message += `� *الكمية:* ${item.quantity}%0A`;
+    message += `� *الإجمالي:* ${productTotal} IQD%0A`;
+  });
+  message += "--------------------------------%0A";
+
+  const total = cart.reduce((sum, item) => {
+    const product = products.find(p => p.id === item.id);
+    return sum + (product.price * item.quantity);
+  }, 0);
+
+  message += `%0A� *المجموع الكلي*: ${total} IQD%0A%0A`;
+  message += "� *معلومات الصيدلية *:%0A";
+  message += `• *الاسم*: ${pharmacyName}%0A`;
+  message += `• *رقم الهاتف*: ${pharmacyPhone}%0A`;
+  message += `• *العنوان*: ${pharmacyAddress}%0A`;
+  if(pharmacyNotes) {
+    message += `• *الملاحظات*: ${pharmacyNotes}%0A`;
+  }
+
+  // رقم الواتس ورابط فتح الرسالة
+  const whatsappNumber = "9647824130002";
+  const url = `https://wa.me/${whatsappNumber}?text=${message}`;
+
+  // إذا كانت نافذة واتساب مفتوحة من قبل، يتم إغلاقها
+  if (whatsappWindow && !whatsappWindow.closed) {
+    whatsappWindow.close();
+  }
+  // فتح نافذة جديدة والاحتفاظ بمرجعها
+  whatsappWindow = window.open(url, "_blank");
+}
+
+  
+    /* دوال المحفوظات */
     function openFavoritesModal() {
       const favModal = document.getElementById("favorites-modal");
       document.getElementById("favorites-content").innerHTML = renderFavorites();
       favModal.classList.add("active");
     }
-    
+  
     function renderFavorites() {
       const favProducts = products.filter(p => savedProducts.includes(p.id));
       if (favProducts.length === 0) {
@@ -950,14 +881,16 @@
       html += `</div>`;
       return html;
     }
-    
+  
+    /* دوال الأكثر مبيعاً */
     function openMostSoldModal() {
       const modal = document.getElementById("most-sold-modal");
       document.getElementById("most-sold-content").innerHTML = renderMostSold();
       modal.classList.add("active");
     }
-    
+  
     function renderMostSold() {
+      // يمكنك تعديل التصفية حسب احتياجك؛ هنا نستخدم المصفوفة mostSoldProductIds
       const mostSold = products.filter(p => mostSoldProductIds.includes(p.id));
       if (mostSold.length === 0) {
         return `<div class="modal-header"><h4>لا توجد منتجات</h4></div>`;
@@ -972,7 +905,8 @@
       html += `</div>`;
       return html;
     }
-    
+  
+    /* التوجيه لبطاقة المنتج مع إخفاء النوافذ المنبثقة */
     function scrollToProduct(productId) {
       const card = document.querySelector(`.product-card[data-product-id="${productId}"]`);
       if (card) {
@@ -980,46 +914,52 @@
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
         setTimeout(() => card.classList.remove("highlight"), 1500);
       }
+      // إخفاء نوافذ المحفوظات والأكثر مبيعاً
       document.getElementById("favorites-modal").classList.remove("active");
       document.getElementById("most-sold-modal").classList.remove("active");
     }
-    
+  
+    /* أحداث النقر على عناصر الشريط الجانبي */
     document.getElementById("toggle-sidebar").addEventListener("click", function(e) {
       document.getElementById("sidebar").classList.toggle("expanded");
       e.stopPropagation();
     });
-    
+  
     document.getElementById("menu-home").addEventListener("click", function() {
       this.querySelector("svg").classList.add("animate-home");
       setTimeout(() => this.querySelector("svg").classList.remove("animate-home"), 500);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-    
+  
+    // زر البحث: تمديد شريط البحث وتغيير رمز الزر عند النقر
     document.getElementById("menu-search").addEventListener("click", function() {
       this.querySelector("svg").classList.add("animate-search");
       setTimeout(() => this.querySelector("svg").classList.remove("animate-search"), 500);
       const searchContainer = document.getElementById("search-bar-container");
       searchContainer.classList.toggle("active");
       if(searchContainer.classList.contains("active")){
+        // تغيير رمز البحث إلى رمز الإغلاق (×)
         this.querySelector("svg").innerHTML = '<line x1="18" y1="6" x2="6" y2="18" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/>';
         document.getElementById("search-bar").focus();
       } else {
+        // إعادة رمز البحث الأصلي
         this.querySelector("svg").innerHTML = '<path d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" fill="none"/>';
       }
     });
-    
+  
+    // زر الأكثر مبيعاً
     document.getElementById("menu-most-sold").addEventListener("click", function() {
       this.querySelector("svg").classList.add("animate-heart");
       setTimeout(() => this.querySelector("svg").classList.remove("animate-heart"), 500);
       openMostSoldModal();
     });
-    
+  
     document.getElementById("menu-favorites").addEventListener("click", function() {
       this.querySelector("svg").classList.add("animate-heart");
       setTimeout(() => this.querySelector("svg").classList.remove("animate-heart"), 500);
       openFavoritesModal();
     });
-    
+  
     document.getElementById("menu-darkmode").addEventListener("click", function() {
       const icon = document.getElementById("darkmode-icon");
       icon.classList.add("toggle-animation");
@@ -1043,12 +983,7 @@
         icon.classList.remove("toggle-animation");
       }, 500);
     });
-    
-    // عند النقر على زر الإدارة يتم عرض نافذة الإدارة الداخلية
-    document.getElementById("menu-admin").addEventListener("click", function() {
-      document.getElementById("admin-modal").classList.add("active");
-    });
-    
+  
     document.getElementById("fab-cart").addEventListener("click", openCartModal);
     document.getElementById("modal-close").addEventListener("click", function() {
       document.getElementById("cart-modal").classList.remove("active");
@@ -1059,7 +994,8 @@
     document.getElementById("most-sold-modal-close").addEventListener("click", function() {
       document.getElementById("most-sold-modal").classList.remove("active");
     });
-    
+  
+    /* عرض نافذة تكبير الصورة */
     function showImageModal(src) {
       const modal = document.getElementById("image-modal");
       document.getElementById("modal-image").src = src;
@@ -1068,125 +1004,24 @@
     document.getElementById("image-modal-close").addEventListener("click", function() {
       document.getElementById("image-modal").classList.remove("active");
     });
-    
+  
+    // تفعيل التصفية عند الكتابة في شريط البحث
     document.getElementById("search-bar").addEventListener("keyup", function() {
       filterProducts(this.value);
     });
-    
+  
+    /* تهيئة عرض المنتجات */
     renderProducts();
+  
+    // عند تحميل الصفحة، حساب وعرض عدد الأعضاء (عدد الرموز + 5000)
     document.addEventListener("DOMContentLoaded", function() {
       const memberCountEl = document.getElementById("member-count");
       if(memberCountEl) {
-        const count = 9 + 5000;
+        const count = validCodes.length + 5000;
         memberCountEl.textContent = count;
       }
-      const storedOrderCount = localStorage.getItem("orderCount") || "0";
-      document.getElementById("order-count").textContent = storedOrderCount;
     });
-    
-    /* وظائف واجهة الإدارة الداخلية */
-    let adminProductsList = JSON.parse(localStorage.getItem("adminProducts")) || [];
-    let nextProductId = parseInt(localStorage.getItem("nextProductId")) || 100;
-    const adminProductListDiv = document.getElementById("admin-product-list");
-    
-    function renderAdminProducts() {
-      adminProductListDiv.innerHTML = "";
-      if(adminProductsList.length === 0) {
-        adminProductListDiv.innerHTML = "<p>لا توجد منتجات مضافة.</p>";
-        return;
-      }
-      adminProductsList.forEach(product => {
-        const div = document.createElement("div");
-        div.className = "product-list-item d-flex justify-content-between align-items-center";
-        div.innerHTML = `
-          <div>
-            <strong>${product.name}</strong> - ${product.price} IQD
-          </div>
-          <div>
-            <button class="btn btn-sm btn-warning" onclick="editProduct(${product.id})">تعديل</button>
-            <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">حذف</button>
-          </div>
-        `;
-        adminProductListDiv.appendChild(div);
-      });
-    }
-    
-    /* تعديل دالة editProduct لتعديل الاسم، التفاصيل، السعر، ورابط الصورة */
-    function editProduct(id) {
-      const product = adminProductsList.find(p => p.id === id);
-      const newName = prompt("تعديل اسم المنتج:", product.name);
-      if(newName !== null && newName.trim() !== "") {
-        product.name = newName.trim();
-      }
-      const newDetails = prompt("تعديل تفاصيل المنتج:", product.details || "");
-      if(newDetails !== null) {
-        product.details = newDetails;
-      }
-      const newPrice = prompt("تعديل السعر:", product.price);
-      if(newPrice !== null && !isNaN(newPrice)) {
-        product.price = parseFloat(newPrice);
-      }
-      const newImage = prompt("تعديل رابط صورة المنتج:", product.image);
-      if(newImage !== null && newImage.trim() !== "") {
-        product.image = newImage.trim();
-      }
-      localStorage.setItem("adminProducts", JSON.stringify(adminProductsList));
-      renderAdminProducts();
-    }
-    
-    function deleteProduct(id) {
-      if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-        adminProductsList = adminProductsList.filter(p => p.id !== id);
-        localStorage.setItem("adminProducts", JSON.stringify(adminProductsList));
-        renderAdminProducts();
-      }
-    }
-    
-    let validCodesAdmin = JSON.parse(localStorage.getItem("validCodesAdmin")) || ["272311","07730799909","07736374464","07802431779","07822632020","07854009540","07804984615","07737530689","0000"];
-    const codeListDiv = document.getElementById("code-list");
-    
-    function renderCodes() {
-      codeListDiv.innerHTML = "";
-      if(validCodesAdmin.length === 0) {
-        codeListDiv.innerHTML = "<p>لا توجد رموز.</p>";
-        return;
-      }
-      validCodesAdmin.forEach((code, index) => {
-        const div = document.createElement("div");
-        div.className = "d-flex justify-content-between align-items-center mb-2";
-        div.innerHTML = `
-          <span>${code}</span>
-          <button class="btn btn-sm btn-danger" onclick="deleteCode(${index})">حذف</button>
-        `;
-        codeListDiv.appendChild(div);
-      });
-    }
-    
-    document.getElementById("add-code-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const newCode = document.getElementById("new-code").value.trim();
-      if(newCode !== "") {
-        validCodesAdmin.push(newCode);
-        localStorage.setItem("validCodesAdmin", JSON.stringify(validCodesAdmin));
-        renderCodes();
-        this.reset();
-      }
-    });
-    
-    function deleteCode(index) {
-      if(confirm("هل أنت متأكد من حذف هذا الرمز؟")) {
-        validCodesAdmin.splice(index, 1);
-        localStorage.setItem("validCodesAdmin", JSON.stringify(validCodesAdmin));
-        renderCodes();
-      }
-    }
-    
-    document.getElementById("admin-close").addEventListener("click", function() {
-      document.getElementById("admin-modal").classList.remove("active");
-    });
-    
-    renderAdminProducts();
-    renderCodes();
   </script>
+  
 </body>
 </html>
