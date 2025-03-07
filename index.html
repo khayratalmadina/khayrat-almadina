@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>مذخر فيتامين </title>
+  <title>مذخر فيتامين</title>
   <!-- Bootstrap 5 مع RTL -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
   <!-- خط Cairo -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+  <!-- إضافة مكتبات Firebase (الإصدار 8 لتسهيل الدمج مع الكود الحالي) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <style>
-    /* تعريف ألوان متجر كوزمتك */
+    /* تعريف ألوان متجر  */
     :root {
-      --primary-color: #034304;   /* وردي حيوي */
-      --secondary-color: #838506; /* بنفسجي */
-      --accent-color: #4b9c5a;    /* وردي فاتح */
-      --background: #FCE4EC;      /* خلفية وردية فاتحة */
+      --primary-color: #d10000;   /* وردي حيوي */
+      --secondary-color: #5a0000; /* بنفسجي */
+      --accent-color: #000000;    /* وردي فاتح */
+      --background: #ffffff;      /* خلفية وردية فاتحة */
       --sidebar-bg: #ffffff;
       --modal-bg: rgba(0, 0, 0, 0.7);
     }
@@ -44,7 +47,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 0.8rem 0; /* تقليل الحشوة العمودية */
+      padding: 0.8rem 0;
       transition: width 0.3s ease;
       border-top-right-radius: 10px;
       border-bottom-right-radius: 10px;
@@ -58,7 +61,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0.8rem 0; /* تقليل الهوامش العمودية */
+      margin: 0.8rem 0;
       cursor: pointer;
       position: relative;
       transition: background 0.3s;
@@ -94,13 +97,13 @@
     /* تنسيق الواجهة الرئيسية */
     .main-content {
       margin-left: 80px;
-      padding: 0.5rem 1rem; /* تقليل الحشوة العمودية */
+      padding: 0.5rem 1rem;
       position: relative;
     }
     header {
       background: linear-gradient(to right, var(--primary-color), var(--accent-color));
       color: #fff;
-      padding: 0.8rem 1rem;  /* تقليل ارتفاع الترويسة */
+      padding: 0.8rem 1rem;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       border-radius: 0 0 10px 10px;
     }
@@ -490,10 +493,53 @@
     }
     .admin-section h3 {
       margin-bottom: 0.5rem;
-      
+    }
+    /* إضافة تنسيق للنوافذ المنبثقة الخاصة بلوحة الإدارة */
+    #admin-modal .admin-content {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+    #admin-modal .admin-content:hover {
+      transform: scale(1.02);
     }
 
+    /* تحسين تنسيق نماذج الإدخال في لوحة الإدارة */
+    #admin-modal input,
+    #admin-modal textarea {
+      width: 100%;
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+    }
 
+    /* تخصيص ألوان الوضع الليلي للوحات الإدارة */
+    body.dark-mode #admin-modal .admin-content {
+      background: #2c3e50;
+      color: #ecf0f1;
+    }
+    
+    /* تحسينات للوضع الليلي */
+    body.dark-mode .sidebar {
+      background: #34495e;
+    }
+    body.dark-mode .sidebar .menu-item span.label {
+      color: #ecf0f1;
+    }
+    body.dark-mode .sidebar .menu-item svg {
+      fill: #ecf0f1;
+    }
+    body.dark-mode .product-card {
+      background: #34495e;
+      color: #ecf0f1;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    }
+    body.dark-mode .product-card .product-details {
+      color: #c7bdbd;
+    }
+    body.dark-mode .product-card .product-price {
+      color: var(--primary-color);
+    }
     
   </style>
 </head>
@@ -549,12 +595,8 @@
   <div class="main-content">
     <header>
       <div>
-        <h1><i><b> مذخر فيتامين</b></i></h1>
-        <p><i>اكتشف افضل المنتجات
-
-          <br>
-          07808560009
-        </i></p>
+        <h1><i><b>مذخر فيتامين</b></i></h1>
+        <p><i>اكتشف أفضل المنتجات <br>07808560009</i></p>
       </div>
       <div>
         <div class="member-count d-inline-block me-3">
@@ -597,6 +639,19 @@
       <button class="modal-close" id="favorites-modal-close">&times;</button>
       <div id="favorites-content"></div>
     </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="clear-favorites">حذف جميع المفضلات</button>
+    </div>
+    <script>
+      document.getElementById("clear-favorites").addEventListener("click", function() {
+        if (confirm("هل أنت متأكد من حذف جميع المفضلات؟")) {
+          savedProducts = [];
+          localStorage.setItem("savedProducts", JSON.stringify(savedProducts));
+          document.getElementById("favorites-content").innerHTML = '<div class="modal-header"><h4>لا توجد منتجات محفوظة</h4></div>';
+          document.querySelectorAll(".save-btn.active").forEach(btn => btn.classList.remove("active"));
+        }
+      });
+    </script>
   </div>
   <div class="modal-overlay" id="most-sold-modal">
     <div class="modal-content" id="most-sold-modal-content">
@@ -647,503 +702,633 @@
     </div>
   </div>
   <br>
- 
- 
-<br>
-<br>
-<br>
+  <br><br>
+ <!-- زر حذف المفضلات -->
+<script>
+  document.getElementById("clear-favorites").addEventListener("click", function() {
+    if (confirm("هل أنت متأكد من حذف جميع المفضلات؟")) {
+      savedProducts = [];
+      localStorage.setItem("savedProducts", JSON.stringify(savedProducts));
+      document.getElementById("favorites-content").innerHTML = '<div class="modal-header"><h4>لا توجد منتجات محفوظة</h4></div>';
+      document.querySelectorAll(".save-btn.active").forEach(btn => btn.classList.remove("active"));
+    }
+  });
+</script>
 
-  <script>
-    /* بيانات المنتجات الثابتة */
-    const products = [
-      { id: 1, name: "نورمل سلاين 100ml", details: " كارتون 100 قطعة", price: 65000, quantity: 0, image: "https://i.ibb.co/WNsF15CM/photo.jpg" },
-      { id: 2, name: "paracetamol 100ml", details: "سعر البطل " , price: 1600, quantity: 0, image: "https://i.ibb.co/d453gYqS/photo.jpg" },
-      { id: 3, name: "نورمل سلاين 500ml", details:"الكارتون يحتوي على 30 بطل سعر بطل 1450" , price: 43500, quantity: 0, image: "https://i.ibb.co/394K9cNK/photo.jpg" },
-      { id: 5, name: "NORMAL SALINE 100ml هندي", details: "الكارتون 100 قطعة " , price: 55000, quantity: 0, image: "https://i.ibb.co/JRkxgqkX/photo-4.jpg" },
-      { id: 6, name: "Ringer 500ml", details: "الكارتون 30 بطل ", price: 42000, quantity: 0, image: "https://i.ibb.co/sp3K8RWk/photo.jpg" },
-      { id: 7, name: "جهاز اعطاء سوائل", details: "الكارتون 500 قطعة ", price: 87000, quantity: 0, image: "https://i.ibb.co/60wvbccf/photo-3.jpg" },
-      { id: 8, name: "كلكوز سلاين 500ml", details: "الكارتون 30 بطل ", price: 42000, quantity: 0, image: "https://i.ibb.co/7xwdFwHf/photo-2.jpg" },
-      { id: 9, name: "Distilled water 5ml", details: "الكارتون 20 باكيت", price: 260000, quantity: 0, image: "https://i.ibb.co/Fkv7SkGF/photo-5.jpg" },
-      { id: 10, name: "كانيولا خضراء", details: "باكيت 100 قطعة", price: 19000, quantity: 0, image: "https://i.ibb.co/1tMmr13y/photo-2.jpg" },
+<!-- نوافذ المودال -->
+</div>
+<div class="modal-overlay" id="most-sold-modal">
+  <div class="modal-content" id="most-sold-modal-content">
+    <button class="modal-close" id="most-sold-modal-close">&times;</button>
+    <div id="most-sold-content"></div>
+  </div>
+</div>
+<div class="modal-overlay" id="image-modal">
+  <div class="modal-content image-modal-content">
+    <button class="modal-close" id="image-modal-close">&times;</button>
+    <img id="modal-image" src="" alt="صورة المنتج">
+  </div>
+</div>
+
+<!-- نافذة الإدارة الداخلية -->
+<div id="admin-modal">
+  <div class="admin-content">
+    <div class="admin-header">
+      <h1>لوحة الإدارة</h1>
+      <button id="admin-close" class="btn btn-secondary">خروج</button>
+    </div>
+    <div class="admin-section">
+      <h3>إضافة منتج جديد</h3>
+      <form id="add-product-form">
+        <div class="mb-3">
+          <label for="product-name" class="form-label">اسم المنتج</label>
+          <input type="text" class="form-control" id="product-name" required>
+        </div>
+        <div class="mb-3">
+          <label for="product-details" class="form-label">تفاصيل المنتج</label>
+          <input type="text" class="form-control" id="product-details">
+        </div>
+        <div class="mb-3">
+          <label for="product-price" class="form-label">السعر (IQD)</label>
+          <input type="number" class="form-control" id="product-price" required>
+        </div>
+        <div class="mb-3">
+          <label for="product-image" class="form-label">رابط صورة المنتج</label>
+          <input type="text" class="form-control" id="product-image" required>
+        </div>
+        <button type="submit" class="btn btn-primary">أضف المنتج</button>
+      </form>
+    </div>
+    <div class="admin-section">
+      <h3>المنتجات المضافة</h3>
+      <div id="admin-product-list"></div>
+    </div>
+  </div>
+</div>
+<br>
+<br><br>
+
+<!-- الكود الرئيسي -->
+<script>
+  (function(){
+    // إنشاء أيقونة الإدارة وإضافتها إلى الشريط الجانبي
+    const sidebar = document.getElementById('sidebar');
+    let adminIcon = document.createElement('div');
+    adminIcon.id = 'admin-icon';
+    adminIcon.title = 'إدارة المنتجات';
+    adminIcon.style.cursor = 'pointer';
+    adminIcon.style.marginTop = 'auto';
+    adminIcon.style.padding = '0.8rem';
+    adminIcon.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 2a10 10 0 00-7.07 17.07A10 10 0 1012 2zm1 14.93h-2v-2h2v2zm0-4h-2V7h2v5.93z" fill="var(--primary-color)"/></svg>';
+    adminIcon.style.display = 'none';
+    sidebar.appendChild(adminIcon);
+
+    // دالة لتحديث ظهور أيقونة الإدارة بحسب حالة الشريط الجانبي
+    function updateAdminIconVisibility() {
+      adminIcon.style.display = sidebar.classList.contains('expanded') ? 'block' : 'none';
+    }
     
-     
-      
-      
-      { id: 16, name: "سرنجة 1cc", details: " الباكيت", price: 5200, quantity: 0, image: "https://i.ibb.co/sTj3Kmf/photo-2.jpg" },
-      { id: 17, name: "كانيولا وردية ", details: "الباكيت 100", price: 19000, quantity: 0, image: "https://i.ibb.co/MxDCqbY2/photo.jpg" },
-      { id: 18, name: "كانيولا صفرة", details: " الباكيت 100", price: 19000, quantity: 0, image: "https://i.ibb.co/1ff6nNsc/photo-3.jpg" },
-      { id: 19, name: "كانيولا زرقاء", details: "الكارتون 100 قطعة", price: 19000, quantity: 0, image: "https://i.ibb.co/tk5k0Jk/photo.jpg" },
-      { id: 20, name: "سرنجة 5cc", details: " الباكيت 4500 الكارتون " , price: 108000, quantity: 0, image: "https://i.ibb.co/DPVp0dyS/photo.jpg" },
-      
-      
-      { id: 23, name: "سرنجة 3 cc ", details: " الباكيت 4851 الكارتون ", price: 131000, quantity: 0, image: "https://i.ibb.co/8LbNmqvW/photo.jpg" },
-      
-      { id: 24, name: "فلاجيل فيال ", details: " سعر البطل ", price: 1600, quantity: 0, image: "https://i.ibb.co/ZRbL5Trr/photo-4.jpg" },
-    ];
+    // مراقبة تغير صفات الشريط الجانبي لتحديث ظهور الأيقونة
+    const observer = new MutationObserver(updateAdminIconVisibility);
+    observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
     
-    // دمج المنتجات المضافة من واجهة الإدارة
-    const adminProducts = JSON.parse(localStorage.getItem("adminProducts")) || [];
-    adminProducts.forEach(prod => {
-      if (!products.some(p => p.id === prod.id)) {
-        products.push(prod);
+    // عند النقر على أيقونة الإدارة يتم طلب الرمز
+    adminIcon.addEventListener('click', function(e){
+      e.stopPropagation();
+      const code = prompt("أدخل رمز الإدارة:");
+      if(code === "220016") {
+        document.getElementById("admin-modal").classList.add("active");
+      } else {
+        alert("رمز غير صحيح");
       }
     });
-    
-    let cart = [];
-    let savedProducts = JSON.parse(localStorage.getItem("savedProducts")) || [];
-    const mostSoldProductIds = [2, 5, 7, 10];
-    
-    function renderProducts(productArray = products) {
-      const grid = document.getElementById("product-grid");
-      grid.innerHTML = "";
-      productArray.forEach((product, index) => {
-        const card = document.createElement("div");
-        card.className = "product-card";
-        card.setAttribute("data-product-id", product.id);
-        let badge = "";
-        if (index < 5) {
-          badge = `<div class="best-seller-badge">الأكثر مبيعاً</div>`;
-          card.classList.add("best-seller");
-        }
-        card.innerHTML = `
-          ${badge}
-          <img src="${product.image}" alt="${product.name}" ondblclick="showImageModal('${product.image}')">
-          <button class="save-btn ${isSaved(product.id) ? 'active' : ''}" onclick="toggleSave(${product.id}, this)">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
-                2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3
-                16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
-          </button>
-          <div class="card-body">
-            <div class="product-title">${product.name}</div>
-            ${ product.details ? `<div class="product-details">${product.details}</div>` : "" }
-            <div class="product-price">${product.price} IQD</div>
-            <div class="quantity-controls">
-              <button onclick="updateQuantity(${product.id}, -1, this)">-</button>
-              <span id="qty-${product.id}">0</span>
-              <button onclick="updateQuantity(${product.id}, 1, this)">+</button>
-            </div>
+  })();
+
+  // إعدادات Firebase الخاصة بمشروعك
+  const firebaseConfig = {
+    apiKey: "AIzaSyBcx6uXHzMK1HInEuFAmqsSBFvPAw86_Ts",
+    authDomain: "mohmed-mod.firebaseapp.com",
+    projectId: "mohmed-mod",
+    storageBucket: "mohmed-mod.firebasestorage.app",
+    messagingSenderId: "724585474855",
+    appId: "1:724585474855:web:a95c26f01cf062db5e9702",
+    measurementId: "G-34HJTJSXPZ"
+  };
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+
+  // تحديد معرف المتجر الحالي، قم بتغيير القيمة حسب كل متجر
+  const storeId = "متجر 4";
+
+  // المتغيرات العامة
+  let products = [];  // ستُملأ المنتجات من قاعدة البيانات
+  let cart = [];
+  let savedProducts = JSON.parse(localStorage.getItem("savedProducts")) || [];
+  const mostSoldProductIds = ["2", "5", "7", "10"]; // معرّفات المنتجات (سلاسل)
+
+  // دالة تحميل المنتجات من Firestore مع تصفية حسب معرف المتجر
+  function loadProducts() {
+    db.collection("products").where("store", "==", storeId).get().then(querySnapshot => {
+      products = [];
+      querySnapshot.forEach(doc => {
+        let product = doc.data();
+        product.id = doc.id; // استخدام معرف الوثيقة
+        products.push(product);
+      });
+      renderProducts();
+    }).catch(error => {
+      console.error("Error fetching products: ", error);
+    });
+  }
+
+  // دالة عرض المنتجات في الواجهة
+  function renderProducts(productArray = products) {
+    const grid = document.getElementById("product-grid");
+    grid.innerHTML = "";
+    productArray.forEach((product, index) => {
+      const card = document.createElement("div");
+      card.className = "product-card";
+      card.setAttribute("data-product-id", product.id);
+      let badge = "";
+      if (index < 5) {
+        badge = `<div class="best-seller-badge">الأكثر مبيعاً</div>`;
+        card.classList.add("best-seller");
+      }
+      card.innerHTML = `
+        ${badge}
+        <img src="${product.image}" alt="${product.name}" ondblclick="showImageModal('${product.image}')">
+        <button class="save-btn ${isSaved(product.id) ? 'active' : ''}" onclick="toggleSave('${product.id}', this)">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+              2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3
+              16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </button>
+        <div class="card-body">
+          <div class="product-title">${product.name}</div>
+          ${ product.details ? `<div class="product-details">${product.details}</div>` : "" }
+          <div class="product-price">${product.price} IQD</div>
+          <div class="quantity-controls">
+            <button onclick="updateQuantity('${product.id}', -1, this)">-</button>
+            <span id="qty-${product.id}">0</span>
+            <button onclick="updateQuantity('${product.id}', 1, this)">+</button>
           </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-    
-    function isSaved(productId) {
-      return savedProducts.includes(productId);
-    }
-    
-    function toggleSave(productId, btn) {
-      if (isSaved(productId)) {
-        savedProducts = savedProducts.filter(id => id !== productId);
-        btn.classList.remove("active");
-      } else {
-        savedProducts.push(productId);
-        btn.classList.add("active");
-        btn.classList.add("animate-heart");
-        setTimeout(() => btn.classList.remove("animate-heart"), 500);
-      }
-      localStorage.setItem("savedProducts", JSON.stringify(savedProducts));
-    }
-    
-    function updateQuantity(productId, change, btn) {
-      const qtyEl = document.getElementById("qty-" + productId);
-      let currentQty = parseInt(qtyEl.textContent);
-      currentQty = Math.max(0, currentQty + change);
-      qtyEl.textContent = currentQty;
-      btn.classList.add("shake");
-      setTimeout(() => btn.classList.remove("shake"), 300);
-      animateIndicator(btn, change > 0 ? 'plus' : 'minus');
-      const existing = cart.find(item => item.id === productId);
-      if (existing) {
-        if (currentQty === 0) {
-          cart = cart.filter(item => item.id !== productId);
-        } else {
-          existing.quantity = currentQty;
-        }
-      } else {
-        if (currentQty > 0) {
-          cart.push({ id: productId, quantity: currentQty });
-        }
-      }
-    }
-    
-    function animateIndicator(btn, type) {
-      const indicator = document.createElement("span");
-      indicator.className = "indicator " + (type === 'plus' ? "plus-indicator" : "minus-indicator");
-      indicator.textContent = type === 'plus' ? "+" : "-";
-      const container = btn.parentElement;
-      const btnLeft = btn.offsetLeft;
-      const btnTop = btn.offsetTop;
-      const btnCenterX = btnLeft + btn.offsetWidth/2 - 10;
-      indicator.style.left = btnCenterX + "px";
-      indicator.style.top = btnTop + "px";
-      container.appendChild(indicator);
-      setTimeout(() => indicator.remove(), 500);
-    }
-    
-    function filterProducts(query) {
-      const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
-      renderProducts(filtered);
-    }
-    
-    function openCartModal() {
-      const modalOverlay = document.getElementById("cart-modal");
-      const dynamicContent = document.getElementById("modal-dynamic-content");
-      dynamicContent.innerHTML = renderCartSummary();
-      modalOverlay.classList.add("active");
-    }
-    
-    function renderCartSummary() {
-      if (cart.length === 0) {
-        return `<div class="modal-header"><h4>سلة الشراء فارغة</h4></div>`;
-      }
-      let html = `<div class="modal-header"><h4>ملخص سلة الشراء</h4></div><div class="modal-body">`;
-      let total = 0;
-      cart.forEach(item => {
-        const product = products.find(p => p.id === item.id);
-        const productTotal = product.price * item.quantity;
-        total += productTotal;
-        html += `<div class="cart-item" onclick="scrollToProduct(${product.id})">
-          <div>${product.name} (×${item.quantity})</div>
-          <div>${productTotal} IQD</div>
-        </div>`;
-      });
-      html += `</div>
-        <div class="cart-total">المجموع الكلي: ${total} IQD</div>
-        <button class="btn btn-primary btn-purchase" onclick="showPharmacyForm()">شراء</button>`;
-      return html;
-    }
-    
-    function showPharmacyForm() {
-      const dynamicContent = document.getElementById("modal-dynamic-content");
-      dynamicContent.innerHTML = `
-        <div class="modal-header"><h4>معلومات الصيدلية</h4></div>
-        <div class="modal-body">
-          <form id="pharmacy-form" class="pharmacy-form">
-            <input type="text" id="pharmacy-name" class="form-control" placeholder="اسم الصيدلية" required>
-            <input type="text" id="pharmacy-address" class="form-control" placeholder="العنوان" required>
-            <input type="text" id="pharmacy-phone" class="form-control" placeholder="رقم الهاتف" required>
-            <textarea id="pharmacy-notes" class="form-control" placeholder="ملاحظات"></textarea>
-            <button type="submit" class="btn btn-success btn-purchase mt-2">أرسل الطلب عبر الواتساب</button>
-          </form>
         </div>
       `;
-      document.getElementById("pharmacy-form").addEventListener("submit", function(e) {
-        e.preventDefault();
-        sendOrder();
-      });
-    }
-    
-    let whatsappWindow = null;
-    function sendOrder() {
-      const pharmacyName = document.getElementById("pharmacy-name").value.trim();
-      const pharmacyAddress = document.getElementById("pharmacy-address").value.trim();
-      const pharmacyPhone = document.getElementById("pharmacy-phone").value.trim();
-      const pharmacyNotes = document.getElementById("pharmacy-notes").value.trim();
-      if (!pharmacyName || !pharmacyAddress || !pharmacyPhone) {
-        alert("يرجى ملء جميع الحقول المطلوبة.");
-        return;
-      }
-      let message = "� *تفاصيل المنتجات*:%0A";
-      cart.forEach((item, index) => {
-        const product = products.find(p => p.id === item.id);
-        const productTotal = product.price * item.quantity;
-        message += "--------------------------------%0A";
-        message += `� *المنتج ${index + 1}:* ${product.name}%0A`;
-        message += `� *السعر:* ${product.price} IQD%0A`;
-        message += `� *الكمية:* ${item.quantity}%0A`;
-        message += `� *الإجمالي:* ${productTotal} IQD%0A`;
-      });
-      message += "--------------------------------%0A";
-      const total = cart.reduce((sum, item) => {
-        const product = products.find(p => p.id === item.id);
-        return sum + (product.price * item.quantity);
-      }, 0);
-      message += `%0A� *المجموع الكلي*: ${total} IQD%0A%0A`;
-      message += "� *معلومات الصيدلية *:%0A";
-      message += `• *الاسم*: ${pharmacyName}%0A`;
-      message += `• *رقم الهاتف*: ${pharmacyPhone}%0A`;
-      message += `• *العنوان*: ${pharmacyAddress}%0A`;
-      if(pharmacyNotes) {
-        message += `• *الملاحظات*: ${pharmacyNotes}%0A`;
-      }
-      const whatsappNumber = "9647824130002";
-      const url = `https://wa.me/${whatsappNumber}?text=${message}`;
-      let orderCount = parseInt(localStorage.getItem("orderCount") || "0");
-      orderCount++;
-      localStorage.setItem("orderCount", orderCount);
-      document.getElementById("order-count").textContent = orderCount;
-      if (whatsappWindow && !whatsappWindow.closed) {
-        whatsappWindow.close();
-      }
-      whatsappWindow = window.open(url, "_blank");
-    }
-    
-    function openFavoritesModal() {
-      const favModal = document.getElementById("favorites-modal");
-      document.getElementById("favorites-content").innerHTML = renderFavorites();
-      favModal.classList.add("active");
-    }
-    
-    function renderFavorites() {
-      const favProducts = products.filter(p => savedProducts.includes(p.id));
-      if (favProducts.length === 0) {
-        return `<div class="modal-header"><h4>لا توجد منتجات محفوظة</h4></div>`;
-      }
-      let html = `<div class="modal-header"><h4>المحفوظات</h4></div><div class="modal-body">`;
-      favProducts.forEach(product => {
-        html += `<div class="cart-item" onclick="scrollToProduct(${product.id})">
-          <div>${product.name}</div>
-          <div>${product.price} IQD</div>
-        </div>`;
-      });
-      html += `</div>`;
-      return html;
-    }
-    
-    function openMostSoldModal() {
-      const modal = document.getElementById("most-sold-modal");
-      document.getElementById("most-sold-content").innerHTML = renderMostSold();
-      modal.classList.add("active");
-    }
-    
-    function renderMostSold() {
-      const mostSold = products.filter(p => mostSoldProductIds.includes(p.id));
-      if (mostSold.length === 0) {
-        return `<div class="modal-header"><h4>لا توجد منتجات</h4></div>`;
-      }
-      let html = `<div class="modal-header"><h4>الأكثر مبيعا</h4></div><div class="modal-body">`;
-      mostSold.forEach(product => {
-        html += `<div class="cart-item" onclick="scrollToProduct(${product.id})">
-          <div>${product.name}</div>
-          <div>${product.price} IQD</div>
-        </div>`;
-      });
-      html += `</div>`;
-      return html;
-    }
-    
-    function scrollToProduct(productId) {
-      const card = document.querySelector(`.product-card[data-product-id="${productId}"]`);
-      if (card) {
-        card.classList.add("highlight");
-        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        setTimeout(() => card.classList.remove("highlight"), 1500);
-      }
-      document.getElementById("favorites-modal").classList.remove("active");
-      document.getElementById("most-sold-modal").classList.remove("active");
-    }
-    
-    document.getElementById("toggle-sidebar").addEventListener("click", function(e) {
-      document.getElementById("sidebar").classList.toggle("expanded");
-      e.stopPropagation();
+      grid.appendChild(card);
     });
-    
-    document.getElementById("menu-home").addEventListener("click", function() {
-      this.querySelector("svg").classList.add("animate-home");
-      setTimeout(() => this.querySelector("svg").classList.remove("animate-home"), 500);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-    
-    document.getElementById("menu-search").addEventListener("click", function() {
-      this.querySelector("svg").classList.add("animate-search");
-      setTimeout(() => this.querySelector("svg").classList.remove("animate-search"), 500);
-      const searchContainer = document.getElementById("search-bar-container");
-      searchContainer.classList.toggle("active");
-      if(searchContainer.classList.contains("active")){
-        this.querySelector("svg").innerHTML = '<line x1="18" y1="6" x2="6" y2="18" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/>';
-        document.getElementById("search-bar").focus();
+  }
+
+  function isSaved(productId) {
+    return savedProducts.includes(productId);
+  }
+
+  function toggleSave(productId, btn) {
+    if (isSaved(productId)) {
+      savedProducts = savedProducts.filter(id => id !== productId);
+      btn.classList.remove("active");
+    } else {
+      savedProducts.push(productId);
+      btn.classList.add("active");
+      btn.classList.add("animate-heart");
+      setTimeout(() => btn.classList.remove("animate-heart"), 500);
+    }
+    localStorage.setItem("savedProducts", JSON.stringify(savedProducts));
+  }
+
+  function updateQuantity(productId, change, btn) {
+    const qtyEl = document.getElementById("qty-" + productId);
+    let currentQty = parseInt(qtyEl.textContent);
+    currentQty = Math.max(0, currentQty + change);
+    qtyEl.textContent = currentQty;
+    btn.classList.add("shake");
+    setTimeout(() => btn.classList.remove("shake"), 300);
+    animateIndicator(btn, change > 0 ? 'plus' : 'minus');
+    const existing = cart.find(item => item.id === productId);
+    if (existing) {
+      if (currentQty === 0) {
+        cart = cart.filter(item => item.id !== productId);
       } else {
-        this.querySelector("svg").innerHTML = '<path d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" fill="none"/>';
+        existing.quantity = currentQty;
       }
-    });
-    
-    document.getElementById("menu-most-sold").addEventListener("click", function() {
-      this.querySelector("svg").classList.add("animate-heart");
-      setTimeout(() => this.querySelector("svg").classList.remove("animate-heart"), 500);
-      openMostSoldModal();
-    });
-    
-    document.getElementById("menu-favorites").addEventListener("click", function() {
-      this.querySelector("svg").classList.add("animate-heart");
-      setTimeout(() => this.querySelector("svg").classList.remove("animate-heart"), 500);
-      openFavoritesModal();
-    });
-    
-    document.getElementById("menu-darkmode").addEventListener("click", function() {
-      const icon = document.getElementById("darkmode-icon");
-      icon.classList.add("toggle-animation");
-      setTimeout(() => {
-        document.body.classList.toggle("dark-mode");
-        if (document.body.classList.contains("dark-mode")) {
-          icon.innerHTML = `<circle cx="12" cy="12" r="5" fill="var(--primary-color)"/>
-            <g stroke="var(--primary-color)" stroke-width="2">
-              <line x1="12" y1="1" x2="12" y2="4"/>
-              <line x1="12" y1="20" x2="12" y2="23"/>
-              <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/>
-              <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
-              <line x1="1" y1="12" x2="4" y2="12"/>
-              <line x1="20" y1="12" x2="23" y2="12"/>
-              <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/>
-              <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/>
-            </g>`;
-        } else {
-          icon.innerHTML = `<path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1012 21a9 9 0 009-8.21z" fill="var(--primary-color)"/>`;
-        }
-        icon.classList.remove("toggle-animation");
-      }, 500);
-    });
-    
-    document.getElementById("fab-cart").addEventListener("click", openCartModal);
-    document.getElementById("modal-close").addEventListener("click", function() {
-      document.getElementById("cart-modal").classList.remove("active");
-    });
-    document.getElementById("favorites-modal-close").addEventListener("click", function() {
-      document.getElementById("favorites-modal").classList.remove("active");
-    });
-    document.getElementById("most-sold-modal-close").addEventListener("click", function() {
-      document.getElementById("most-sold-modal").classList.remove("active");
-    });
-    
-    function showImageModal(src) {
-      const modal = document.getElementById("image-modal");
-      document.getElementById("modal-image").src = src;
-      modal.classList.add("active");
-    }
-    document.getElementById("image-modal-close").addEventListener("click", function() {
-      document.getElementById("image-modal").classList.remove("active");
-    });
-    
-    document.getElementById("search-bar").addEventListener("keyup", function() {
-      filterProducts(this.value);
-    });
-    
-    renderProducts();
-    document.addEventListener("DOMContentLoaded", function() {
-      const memberCountEl = document.getElementById("member-count");
-      if(memberCountEl) {
-        const count = 9 + 5000;
-        memberCountEl.textContent = count;
-      }
-      const storedOrderCount = localStorage.getItem("orderCount") || "0";
-      document.getElementById("order-count").textContent = storedOrderCount;
-    });
-    
-    /* وظائف لوحة الإدارة الداخلية */
-    let adminProductsList = JSON.parse(localStorage.getItem("adminProducts")) || [];
-    let nextProductId = parseInt(localStorage.getItem("nextProductId")) || 100;
-    const adminProductListDiv = document.getElementById("admin-product-list");
-    
-    function renderAdminProducts() {
-      adminProductListDiv.innerHTML = "";
-      if(adminProductsList.length === 0) {
-        adminProductListDiv.innerHTML = "<p>لا توجد منتجات مضافة.</p>";
-        return;
-      }
-      adminProductsList.forEach(product => {
-        const div = document.createElement("div");
-        div.className = "product-list-item d-flex justify-content-between align-items-center";
-        div.innerHTML = `
-          <div>
-            <strong>${product.name}</strong> - ${product.price} IQD
-          </div>
-          <div>
-            <button class="btn btn-sm btn-warning" onclick="editProduct(${product.id})">تعديل</button>
-            <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">حذف</button>
-          </div>
-        `;
-        adminProductListDiv.appendChild(div);
-      });
-    }
-    
-    function editProduct(id) {
-      const product = adminProductsList.find(p => p.id === id);
-      const newName = prompt("تعديل اسم المنتج:", product.name);
-      if(newName !== null && newName.trim() !== "") {
-        product.name = newName.trim();
-      }
-      const newDetails = prompt("تعديل تفاصيل المنتج:", product.details || "");
-      if(newDetails !== null) {
-        product.details = newDetails;
-      }
-      const newPrice = prompt("تعديل السعر:", product.price);
-      if(newPrice !== null && !isNaN(newPrice)) {
-        product.price = parseFloat(newPrice);
-      }
-      const newImage = prompt("تعديل رابط صورة المنتج:", product.image);
-      if(newImage !== null && newImage.trim() !== "") {
-        product.image = newImage.trim();
-      }
-      localStorage.setItem("adminProducts", JSON.stringify(adminProductsList));
-      renderAdminProducts();
-      renderProducts();
-    }
-    
-    function deleteProduct(id) {
-      if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-        adminProductsList = adminProductsList.filter(p => p.id !== id);
-        localStorage.setItem("adminProducts", JSON.stringify(adminProductsList));
-        renderAdminProducts();
-        renderProducts();
+    } else {
+      if (currentQty > 0) {
+        cart.push({ id: productId, quantity: currentQty });
       }
     }
-    
-    document.getElementById("admin-close").addEventListener("click", function() {
-      document.getElementById("admin-modal").classList.remove("active");
+  }
+
+  function animateIndicator(btn, type) {
+    const indicator = document.createElement("span");
+    indicator.className = "indicator " + (type === 'plus' ? "plus-indicator" : "minus-indicator");
+    indicator.textContent = type === 'plus' ? "+" : "-";
+    const container = btn.parentElement;
+    const btnLeft = btn.offsetLeft;
+    const btnTop = btn.offsetTop;
+    const btnCenterX = btnLeft + btn.offsetWidth / 2 - 10;
+    indicator.style.left = btnCenterX + "px";
+    indicator.style.top = btnTop + "px";
+    container.appendChild(indicator);
+    setTimeout(() => indicator.remove(), 500);
+  }
+
+  function filterProducts(query) {
+    const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+    renderProducts(filtered);
+  }
+
+  function openCartModal() {
+    const modalOverlay = document.getElementById("cart-modal");
+    const dynamicContent = document.getElementById("modal-dynamic-content");
+    dynamicContent.innerHTML = renderCartSummary();
+    modalOverlay.classList.add("active");
+  }
+
+  function renderCartSummary() {
+    if (cart.length === 0) {
+      return `<div class="modal-header"><h4>سلة الشراء فارغة</h4></div>`;
+    }
+    let html = `<div class="modal-header"><h4>ملخص سلة الشراء</h4></div><div class="modal-body">`;
+    let total = 0;
+    cart.forEach(item => {
+      const product = products.find(p => p.id === item.id);
+      const productTotal = product.price * item.quantity;
+      total += productTotal;
+      html += `<div class="cart-item" onclick="scrollToProduct('${product.id}')">
+        <div>${product.name} (×${item.quantity})</div>
+        <div>${productTotal} IQD</div>
+      </div>`;
     });
-    
-    // حدث إرسال نموذج إضافة المنتج
-    document.getElementById("add-product-form").addEventListener("submit", function(e) {
+    html += `</div>
+      <div class="cart-total">المجموع الكلي: ${total} IQD</div>
+      <button class="btn btn-primary btn-purchase" onclick="showPharmacyForm()">شراء</button>`;
+    return html;
+  }
+
+  function showPharmacyForm() {
+    const dynamicContent = document.getElementById("modal-dynamic-content");
+    dynamicContent.innerHTML = `
+      <div class="modal-header"><h4>معلومات الصيدلية</h4></div>
+      <div class="modal-body">
+        <form id="pharmacy-form" class="pharmacy-form">
+          <input type="text" id="pharmacy-name" class="form-control" placeholder="اسم الصيدلية" required>
+          <input type="text" id="pharmacy-address" class="form-control" placeholder="العنوان" required>
+          <input type="text" id="pharmacy-phone" class="form-control" placeholder="رقم الهاتف" required>
+          <textarea id="pharmacy-notes" class="form-control" placeholder="ملاحظات"></textarea>
+          <button type="submit" class="btn btn-success btn-purchase mt-2">أرسل الطلب عبر الواتساب</button>
+        </form>
+      </div>
+    `;
+    document.getElementById("pharmacy-form").addEventListener("submit", function(e) {
       e.preventDefault();
-      const name = document.getElementById("product-name").value.trim();
-      const details = document.getElementById("product-details").value.trim();
-      const price = parseFloat(document.getElementById("product-price").value.trim());
-      const image = document.getElementById("product-image").value.trim();
-      if(name && !isNaN(price) && image){
-        const newProduct = {
-          id: nextProductId,
-          name: name,
-          details: details,
-          price: price,
-          quantity: 0,
-          image: image
+      sendOrder();
+    });
+  }
+
+  let whatsappWindow = null;
+  function sendOrder() {
+    const pharmacyName = document.getElementById("pharmacy-name").value.trim();
+    const pharmacyAddress = document.getElementById("pharmacy-address").value.trim();
+    const pharmacyPhone = document.getElementById("pharmacy-phone").value.trim();
+    const pharmacyNotes = document.getElementById("pharmacy-notes").value.trim();
+    if (!pharmacyName || !pharmacyAddress || !pharmacyPhone) {
+      alert("يرجى ملء جميع الحقول المطلوبة.");
+      return;
+    }
+    let message = "� *تفاصيل المنتجات*:%0A";
+    cart.forEach((item, index) => {
+      const product = products.find(p => p.id === item.id);
+      const productTotal = product.price * item.quantity;
+      message += "--------------------------------%0A";
+      message += `� *المنتج ${index + 1}:* ${product.name}%0A`;
+      message += `� *السعر:* ${product.price} IQD%0A`;
+      message += `� *الكمية:* ${item.quantity}%0A`;
+      message += `� *الإجمالي:* ${productTotal} IQD%0A`;
+    });
+    message += "--------------------------------%0A";
+    const total = cart.reduce((sum, item) => {
+      const product = products.find(p => p.id === item.id);
+      return sum + (product.price * item.quantity);
+    }, 0);
+    message += `%0A� *المجموع الكلي*: ${total} IQD%0A%0A`;
+    message += "� *معلومات الصيدلية *:%0A";
+    message += `• *الاسم*: ${pharmacyName}%0A`;
+    message += `• *رقم الهاتف*: ${pharmacyPhone}%0A`;
+    message += `• *العنوان*: ${pharmacyAddress}%0A`;
+    if (pharmacyNotes) {
+      message += `• *الملاحظات*: ${pharmacyNotes}%0A`;
+    }
+    const whatsappNumber = "9647824130002";
+    const url = `https://wa.me/${whatsappNumber}?text=${message}`;
+
+    // تحديث عداد الطلبات المحلي
+    let orderCount = parseInt(localStorage.getItem("orderCount") || "0");
+    orderCount++;
+    localStorage.setItem("orderCount", orderCount);
+    document.getElementById("order-count").textContent = orderCount;
+    
+    // حفظ بيانات الطلب في مجموعة "orders" بقاعدة Firebase
+    const orderData = {
+      pharmacyName: pharmacyName,
+      pharmacyAddress: pharmacyAddress,
+      pharmacyPhone: pharmacyPhone,
+      pharmacyNotes: pharmacyNotes,
+      cart: cart.map(item => {
+        const product = products.find(p => p.id === item.id);
+        return {
+          name: product.name,
+          price: product.price,
+          quantity: item.quantity
         };
-        adminProductsList.push(newProduct);
-        localStorage.setItem("adminProducts", JSON.stringify(adminProductsList));
-        nextProductId++;
-        localStorage.setItem("nextProductId", nextProductId);
-        renderAdminProducts();
-        renderProducts();
-        this.reset();
+      }),
+      total: total,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    db.collection("orders").add(orderData)
+      .then(() => {
+        console.log("تم حفظ الطلب بنجاح في قاعدة البيانات.");
+      })
+      .catch(error => {
+        console.error("خطأ في حفظ الطلب:", error);
+      });
+
+    if (whatsappWindow && !whatsappWindow.closed) {
+      whatsappWindow.close();
+    }
+    whatsappWindow = window.open(url, "_blank");
+  }
+
+  function openFavoritesModal() {
+    const favModal = document.getElementById("favorites-modal");
+    document.getElementById("favorites-content").innerHTML = renderFavorites();
+    favModal.classList.add("active");
+  }
+
+  function renderFavorites() {
+    const favProducts = products.filter(p => savedProducts.includes(p.id));
+    if (favProducts.length === 0) {
+      return `<div class="modal-header"><h4>لا توجد منتجات محفوظة</h4></div>`;
+    }
+    let html = `<div class="modal-header"><h4>المحفوظات</h4></div><div class="modal-body">`;
+    favProducts.forEach(product => {
+      html += `<div class="cart-item" onclick="scrollToProduct('${product.id}')">
+        <div>${product.name}</div>
+        <div>${product.price} IQD</div>
+      </div>`;
+    });
+    html += `</div>`;
+    return html;
+  }
+
+  function openMostSoldModal() {
+    const modal = document.getElementById("most-sold-modal");
+    document.getElementById("most-sold-content").innerHTML = renderMostSold();
+    modal.classList.add("active");
+  }
+
+  function renderMostSold() {
+    const mostSold = products.filter(p => mostSoldProductIds.includes(p.id));
+    if (mostSold.length === 0) {
+      return `<div class="modal-header"><h4>لا توجد منتجات</h4></div>`;
+    }
+    let html = `<div class="modal-header"><h4>الأكثر مبيعا</h4></div><div class="modal-body">`;
+    mostSold.forEach(product => {
+      html += `<div class="cart-item" onclick="scrollToProduct('${product.id}')">
+        <div>${product.name}</div>
+        <div>${product.price} IQD</div>
+      </div>`;
+    });
+    html += `</div>`;
+    return html;
+  }
+
+  function scrollToProduct(productId) {
+    const card = document.querySelector(`.product-card[data-product-id="${productId}"]`);
+    if (card) {
+      card.classList.add("highlight");
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => card.classList.remove("highlight"), 1500);
+    }
+    document.getElementById("favorites-modal").classList.remove("active");
+    document.getElementById("most-sold-modal").classList.remove("active");
+  }
+
+  document.getElementById("toggle-sidebar").addEventListener("click", function(e) {
+    document.getElementById("sidebar").classList.toggle("expanded");
+    e.stopPropagation();
+  });
+
+  document.getElementById("menu-home").addEventListener("click", function() {
+    this.querySelector("svg").classList.add("animate-home");
+    setTimeout(() => this.querySelector("svg").classList.remove("animate-home"), 500);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  document.getElementById("menu-search").addEventListener("click", function() {
+    this.querySelector("svg").classList.add("animate-search");
+    setTimeout(() => this.querySelector("svg").classList.remove("animate-search"), 500);
+    const searchContainer = document.getElementById("search-bar-container");
+    searchContainer.classList.toggle("active");
+    if (searchContainer.classList.contains("active")) {
+      this.querySelector("svg").innerHTML = '<line x1="18" y1="6" x2="6" y2="18" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/>';
+      document.getElementById("search-bar").focus();
+    } else {
+      this.querySelector("svg").innerHTML = '<path d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" fill="none"/>';
+    }
+  });
+
+  document.getElementById("menu-most-sold").addEventListener("click", function() {
+    this.querySelector("svg").classList.add("animate-heart");
+    setTimeout(() => this.querySelector("svg").classList.remove("animate-heart"), 500);
+    openMostSoldModal();
+  });
+
+  document.getElementById("menu-favorites").addEventListener("click", function() {
+    this.querySelector("svg").classList.add("animate-heart");
+    setTimeout(() => this.querySelector("svg").classList.remove("animate-heart"), 500);
+    openFavoritesModal();
+  });
+
+  document.getElementById("menu-darkmode").addEventListener("click", function() {
+    const icon = document.getElementById("darkmode-icon");
+    icon.classList.add("toggle-animation");
+    setTimeout(() => {
+      document.body.classList.toggle("dark-mode");
+      if (document.body.classList.contains("dark-mode")) {
+        icon.innerHTML = `<circle cx="12" cy="12" r="5" fill="var(--primary-color)"/>
+          <g stroke="var(--primary-color)" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="4"/>
+            <line x1="12" y1="20" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/>
+            <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="4" y2="12"/>
+            <line x1="20" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/>
+            <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/>
+          </g>`;
       } else {
-        alert("يرجى التأكد من صحة المدخلات");
+        icon.innerHTML = `<path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1012 21a9 9 0 009-8.21z" fill="var(--primary-color)"/>`;
       }
+      icon.classList.remove("toggle-animation");
+    }, 500);
+  });
+
+  document.getElementById("fab-cart").addEventListener("click", openCartModal);
+  document.getElementById("modal-close").addEventListener("click", function() {
+    document.getElementById("cart-modal").classList.remove("active");
+  });
+  document.getElementById("favorites-modal-close").addEventListener("click", function() {
+    document.getElementById("favorites-modal").classList.remove("active");
+  });
+  document.getElementById("most-sold-modal-close").addEventListener("click", function() {
+    document.getElementById("most-sold-modal").classList.remove("active");
+  });
+
+  function showImageModal(src) {
+    const modal = document.getElementById("image-modal");
+    document.getElementById("modal-image").src = src;
+    modal.classList.add("active");
+  }
+  document.getElementById("image-modal-close").addEventListener("click", function() {
+    document.getElementById("image-modal").classList.remove("active");
+  });
+
+  document.getElementById("search-bar").addEventListener("keyup", function() {
+    filterProducts(this.value);
+  });
+
+  /* وظائف لوحة الإدارة باستخدام Firebase */
+  // عرض المنتجات المُضافة في لوحة الإدارة مع تصفية حسب معرف المتجر
+  function renderAdminProducts() {
+    db.collection("products").where("store", "==", storeId).get().then(querySnapshot => {
+      let html = "";
+      if(querySnapshot.empty) {
+        html = "<p>لا توجد منتجات مضافة.</p>";
+      } else {
+        querySnapshot.forEach(doc => {
+          const product = doc.data();
+          product.id = doc.id;
+          html += `<div class="product-list-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong>${product.name}</strong> - ${product.price} IQD
+            </div>
+            <div>
+              <button class="btn btn-sm btn-warning" onclick="editProduct('${product.id}')">تعديل</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteProduct('${product.id}')">حذف</button>
+            </div>
+          </div>`;
+        });
+      }
+      document.getElementById("admin-product-list").innerHTML = html;
+    }).catch(error => {
+      console.error("Error fetching admin products: ", error);
     });
+  }
+
+  function editProduct(docId) {
+    const product = products.find(p => p.id === docId);
+    if (!product) return;
+    const newName = prompt("تعديل اسم المنتج:", product.name);
+    if(newName === null || newName.trim() === "") return;
+    const newDetails = prompt("تعديل تفاصيل المنتج:", product.details || "");
+    const newPrice = prompt("تعديل السعر:", product.price);
+    if(newPrice === null || isNaN(newPrice)) return;
+    const newImage = prompt("تعديل رابط صورة المنتج:", product.image);
+    if(newImage === null || newImage.trim() === "") return;
     
-    /* زر الدخول للوحة الإدارة عبر الضغط السري (خمس مرات أسفل أيقونة الهامبرجر) */
-    let secretClickCount = 0;
-    let secretClickTimer = null;
-    document.getElementById("sidebar").addEventListener("click", function(e) {
-      if(this.classList.contains("expanded")){
-        const hamburger = document.getElementById("toggle-sidebar");
-        const rect = hamburger.getBoundingClientRect();
-        // إذا كان النقر أسفل أيقونة الهامبرجر
-        if(e.clientY > rect.bottom) {
-          secretClickCount++;
-          if(secretClickCount === 5) {
-            document.getElementById("admin-modal").classList.add("active");
-            secretClickCount = 0;
-          }
-          if(secretClickTimer) clearTimeout(secretClickTimer);
-          secretClickTimer = setTimeout(() => {
-            secretClickCount = 0;
-          }, 1000);
+    db.collection("products").doc(docId).update({
+      name: newName.trim(),
+      details: newDetails,
+      price: parseFloat(newPrice),
+      image: newImage.trim()
+    }).then(() => {
+      alert("تم تعديل المنتج");
+      loadProducts();
+      renderAdminProducts();
+    }).catch(error => {
+      console.error("Error updating product: ", error);
+    });
+  }
+
+  function deleteProduct(docId) {
+    if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
+      db.collection("products").doc(docId).delete().then(() => {
+        alert("تم حذف المنتج");
+        loadProducts();
+        renderAdminProducts();
+      }).catch(error => {
+        console.error("Error deleting product: ", error);
+      });
+    }
+  }
+
+  // عند إرسال نموذج إضافة المنتج يتم إضافته إلى Firestore مع تحديد معرف المتجر
+  document.getElementById("add-product-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const name = document.getElementById("product-name").value.trim();
+    const details = document.getElementById("product-details").value.trim();
+    const price = parseFloat(document.getElementById("product-price").value.trim());
+    const image = document.getElementById("product-image").value.trim();
+    if(name && !isNaN(price) && image){
+      const newProduct = {
+        name: name,
+        details: details,
+        price: price,
+        quantity: 0,
+        image: image,
+        store: storeId
+      };
+      db.collection("products").add(newProduct)
+        .then(docRef => {
+          alert("تم إضافة المنتج بنجاح");
+          loadProducts();
+          renderAdminProducts();
+          this.reset();
+        })
+        .catch(error => {
+          console.error("Error adding product: ", error);
+        });
+    } else {
+      alert("يرجى التأكد من صحة المدخلات");
+    }
+  });
+
+  /* زر الدخول للوحة الإدارة عبر الضغط السري (خمس مرات أسفل أيقونة الهامبرجر) */
+  let secretClickCount = 0;
+  let secretClickTimer = null;
+  document.getElementById("sidebar").addEventListener("click", function(e) {
+    if(this.classList.contains("expanded")){
+      const hamburger = document.getElementById("toggle-sidebar");
+      const rect = hamburger.getBoundingClientRect();
+      // إذا كان النقر أسفل أيقونة الهامبرجر
+      if(e.clientY > rect.bottom) {
+        secretClickCount++;
+        if(secretClickCount === 5) {
+          document.getElementById("admin-modal").classList.add("active");
+          secretClickCount = 0;
         }
+        if(secretClickTimer) clearTimeout(secretClickTimer);
+        secretClickTimer = setTimeout(() => {
+          secretClickCount = 0;
+        }, 1000);
       }
-    });
-    
-  </script>
+    }
+  });
+
+  // عند تحميل الصفحة
+  document.addEventListener("DOMContentLoaded", function() {
+    loadProducts();
+    renderAdminProducts();
+    const memberCountEl = document.getElementById("member-count");
+    if(memberCountEl) {
+      const count = 9 + 5000;
+      memberCountEl.textContent = count;
+    }
+    const storedOrderCount = localStorage.getItem("orderCount") || "0";
+    document.getElementById("order-count").textContent = storedOrderCount;
+  });
+</script>
+
+  
 </body>
 </html>
